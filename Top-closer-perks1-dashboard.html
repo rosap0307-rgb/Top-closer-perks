@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top Closer Perks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  :root {
+    --bg: #FBF1EC;
+    --card: #FFFFFF;
+    --ink: #4A2F38;
+    --muted: #A9808C;
+    --rose: #E0899E;
+    --rose-dark: #C1637A;
+    --rose-tint: #FBE4EA;
+    --gold: #D6A756;
+    --gold-dark: #AD8038;
+    --gold-tint: #F8ECD6;
+    --silver: #B7BCC4;
+    --bronze: #C08A5C;
+    --line: #F1DCE2;
+    --line-strong: #E7C2CD;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+  #confettiCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 3000; }
+  .eyebrow {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rose-dark);
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 38px;
+    letter-spacing: 0.01em;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .sub { font-size: 14px; color: var(--muted); margin: 0 0 20px; }
+
+  .exec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .cd-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 14px rgba(224,137,158,0.08);
+  }
+  .cd-label {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+  .cd-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.2;
+  }
+  .cd-value.rust { color: var(--rose-dark); }
+  .cd-value.gold { color: var(--gold-dark); }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--line-strong);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 10px 6px;
+    margin-right: 18px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab-btn.active { color: var(--rose-dark); border-bottom-color: var(--rose); }
+  .tab-btn:hover { color: var(--rose-dark); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    font-style: italic;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+
+  .podium-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .podium-card {
+    flex: 1;
+    max-width: 180px;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 10px;
+    box-shadow: 0 4px 14px rgba(224,137,158,0.1);
+    animation: podiumIn 0.5s ease-out;
+  }
+  @keyframes podiumIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .podium-card.first { order: 2; padding-top: 28px; transform: scale(1.06); z-index: 2; background: linear-gradient(160deg, var(--gold-tint), var(--card) 60%); border-color: var(--gold); }
+  .podium-card.second { order: 1; background: linear-gradient(160deg, #F1F2F4, var(--card) 60%); border-color: var(--silver); }
+  .podium-card.third { order: 3; background: linear-gradient(160deg, #F7E9DC, var(--card) 60%); border-color: var(--bronze); }
+  .podium-medal { font-size: 30px; margin-bottom: 4px; }
+  .podium-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+    margin: 4px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .podium-office { font-size: 11px; color: var(--muted); margin: 2px 0 8px; }
+  .podium-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .streak-badge { font-size: 11px; color: var(--rose-dark); margin-left: 4px; white-space: nowrap; }
+
+  .shingle-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .shingle {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--rose-tint);
+    border-radius: 14px;
+    padding: 13px 16px 13px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
+  }
+  .rank-num {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--muted);
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .agent-info { flex: 1; min-width: 140px; }
+  .agent-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .agent-office {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+  }
+  .agent-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--ink);
+    min-width: 30px;
+    text-align: right;
+  }
+  .badge {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .badge.gold { background: var(--gold-tint); color: var(--gold-dark); }
+  .badge.rust { background: var(--rose-tint); color: var(--rose-dark); }
+  .icon-crown { width: 15px; height: 15px; flex-shrink: 0; color: var(--gold-dark); }
+
+  .row-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .row-actions .btn.secondary { padding: 4px 10px; font-size: 11px; }
+
+  .office-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
+  }
+  .office-card.leading { border-color: var(--gold); background: linear-gradient(135deg, var(--gold-tint), var(--card) 50%); }
+  .office-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+    gap: 8px;
+  }
+  .office-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .office-stat {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .office-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .office-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .bar-track {
+    height: 9px;
+    background: var(--rose-tint);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 2px;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--rose);
+    border-radius: 20px;
+    transition: width 0.3s;
+  }
+  .office-card.leading .bar-fill { background: var(--gold); }
+  .bar-fill.complete { background: var(--gold); }
+
+  .empty-state {
+    text-align: center;
+    padding: 36px 20px;
+    color: var(--muted);
+    font-size: 13px;
+    background: var(--card);
+    border: 1px dashed var(--line-strong);
+    border-radius: 16px;
+  }
+
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    margin-top: 6px;
+    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
+  }
+  .form-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .form-row input, .form-row select {
+    flex: 1;
+    min-width: 120px;
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+  }
+  .form-row input::placeholder { color: var(--muted); }
+  .form-row input:focus, .form-row select:focus {
+    outline: none;
+    border-color: var(--rose);
+  }
+  .btn {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    background: var(--rose);
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn:hover { background: var(--rose-dark); }
+  .btn.secondary {
+    background: none;
+    border: 1px solid var(--line-strong);
+    color: var(--rose-dark);
+  }
+  .btn.secondary:hover { border-color: var(--rose); background: var(--rose-tint); }
+  .status-msg {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    min-height: 16px;
+  }
+  .divider { border: none; border-top: 1px solid var(--line); margin: 28px 0; }
+
+  .prize-banner {
+    background: linear-gradient(135deg, var(--gold-tint), var(--card) 60%);
+    border: 1px solid var(--gold);
+    border-radius: 18px;
+    padding: 22px 24px;
+  }
+  .prize-eyebrow {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin: 0 0 8px;
+  }
+  .prize-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--ink);
+    margin: 0 0 8px;
+  }
+  .prize-desc {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+  .admin-only { display: none; }
+  .admin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--rose-tint);
+    color: var(--rose-dark);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .admin-badge button {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 10px;
+    text-transform: none;
+    letter-spacing: 0;
+    background: none;
+    border: none;
+    color: var(--rose-dark);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+  body.show-admin .admin-only { display: revert; }
+  body.show-admin .admin-only.admin-badge { display: inline-flex; }
+  body.show-admin .tab-btn.admin-only { display: inline-block; }
+  .admin-link {
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--line-strong);
+    margin-top: 36px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .admin-link:hover { color: var(--muted); }
+  body.show-admin .admin-link { color: var(--rose-dark); }
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal-card {
+    width: min(440px, 92vw);
+    max-height: 85vh;
+    overflow-y: auto;
+    background: var(--card);
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    box-shadow: 0 20px 60px rgba(0,0,0,.20);
+  }
+  .close-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .close-row input[type="date"] {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+  }
+  .close-row .btn.secondary { padding: 6px 10px; font-size: 11px; }
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
+  }
+  .chart-card canvas { max-height: 260px; }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 30px; }
+    .exec-grid { grid-template-columns: repeat(2, 1fr); }
+    .podium-card { max-width: 110px; padding: 12px 6px; }
+    .podium-card.first { padding-top: 20px; }
+    .wrap { padding: 20px 14px 50px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="confettiCanvas"></canvas>
+<div class="wrap">
+  <p class="eyebrow">ProCo Roofing &middot; Realtor referral program</p>
+  <h1>Top Closer Perks</h1>
+  <p class="sub">Only closed roofs count. Watch the board move.</p>
+  <span class="admin-badge admin-only" id="adminBadge">Admin mode on <button id="changePasscodeBtn">change passcode</button></span>
+
+  <div class="exec-grid" id="execGrid"></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="individual">Individual</button>
+    <button class="tab-btn" data-tab="offices">Offices</button>
+    <button class="tab-btn" data-tab="grand">Grand prize</button>
+    <button class="tab-btn" data-tab="charts">Charts</button>
+    <button class="tab-btn admin-only" data-tab="log">Log a close</button>
+  </div>
+
+  <div class="panel active" id="panel-individual">
+    <p class="section-title">Top closers this quarter</p>
+    <div id="podiumRow"></div>
+    <div id="individualList"><div class="loading">Loading board...</div></div>
+  </div>
+
+  <div class="panel" id="panel-offices">
+    <p class="section-title">Office race</p>
+    <div id="officeList"><div class="loading">Loading board...</div></div>
+    <hr class="divider admin-only">
+    <p class="section-title admin-only">Add an office</p>
+    <div class="form-card admin-only">
+      <div class="form-row">
+        <input type="text" id="newOfficeName" placeholder="Office name">
+        <input type="number" id="newOfficeAgents" placeholder="Number of agents" min="1">
+      </div>
+      <button class="btn secondary" id="addOfficeBtn">Add office</button>
+      <p class="status-msg" id="officeFormStatus"></p>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-grand">
+    <div class="prize-banner">
+      <p class="prize-eyebrow">Year-end grand prize</p>
+      <p class="prize-title">4-day trip &middot; flight and hotel included</p>
+      <p class="prize-desc">Plus a spa day and a ski lesson. Open only to agents with 15+ closed roofs referred to Rosa in <span id="grandYear"></span>. Awarded to whoever has the most. Hit 8+ in the year and unlock a new phone along the way.</p>
+    </div>
+    <p class="section-title" style="margin-top:22px;">Annual leaderboard</p>
+    <div id="grandList"><div class="loading">Loading board...</div></div>
+  </div>
+
+  <div class="panel" id="panel-charts">
+    <div class="chart-card">
+      <p class="section-title" style="font-size:15px;">Closed roofs by office (this quarter)</p>
+      <canvas id="officeChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <p class="section-title" style="font-size:15px;">Top agents (this quarter)</p>
+      <canvas id="agentChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <p class="section-title" style="font-size:15px;">Closed roofs by month (<span id="chartYear"></span>)</p>
+      <canvas id="monthChart"></canvas>
+    </div>
+  </div>
+
+  <div class="panel admin-only" id="panel-log">
+    <p class="section-title">Log a closed roof</p>
+    <div class="form-card">
+      <div class="form-row">
+        <select id="logOfficeSelect"><option value="">Select office</option></select>
+      </div>
+      <div class="form-row">
+        <input type="text" id="logAgentName" placeholder="Agent name">
+      </div>
+      <button class="btn" id="logReferralBtn">Log closed roof</button>
+      <p class="status-msg" id="logFormStatus"></p>
+    </div>
+  </div>
+
+  <div id="agentModal" class="modal-backdrop">
+    <div class="modal-card">
+      <p class="section-title">Edit agent</p>
+      <div class="form-row">
+        <input type="text" id="modalAgentName" placeholder="Agent name">
+      </div>
+      <div class="form-row">
+        <select id="modalOfficeSelect"></select>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn" id="saveAgentModalBtn">Save</button>
+        <button class="btn secondary" id="cancelAgentModalBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="closesModal" class="modal-backdrop">
+    <div class="modal-card">
+      <p class="section-title" id="closesModalTitle">Close history</p>
+      <div id="closesList"></div>
+      <hr class="divider" style="margin:16px 0;">
+      <p class="cd-label" style="margin-bottom:8px;">Add a manual close (backdated)</p>
+      <div class="close-row">
+        <input type="date" id="newCloseDate">
+        <button class="btn secondary" id="addManualCloseBtn">Add</button>
+      </div>
+      <div style="margin-top:14px;">
+        <button class="btn secondary" id="closeClosesModalBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:40px;">
+  <p class="admin-link" id="adminToggle">Admin</p>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzcB46iOVo4EVhgZnfzVBG-rMA61UEIqb83ldj1aTK-pw_zo8XfSY6VBSPtdGrPvfL3-Q/exec';
+const DEFAULT_PASSCODE = 'proco2026';
+let isAdmin = false;
+
+function getPasscode() {
+  return (state && state.adminPasscode) || DEFAULT_PASSCODE;
+}
+
+function tryUnlockAdmin() {
+  if (isAdmin) {
+    isAdmin = false;
+    document.body.classList.remove('show-admin');
+    document.getElementById('adminToggle').textContent = 'Admin';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('[data-tab="individual"]').classList.add('active');
+    document.getElementById('panel-individual').classList.add('active');
+    renderAll();
+    return;
+  }
+  const entered = window.prompt('Enter admin passcode');
+  if (entered === getPasscode()) {
+    isAdmin = true;
+    document.body.classList.add('show-admin');
+    document.getElementById('adminToggle').textContent = 'Admin mode on \u00b7 tap to exit';
+    renderAll();
+  } else if (entered !== null) {
+    alert('That passcode is not right.');
+  }
+}
+
+async function changePasscode() {
+  const current = window.prompt('Enter your current passcode to confirm:');
+  if (current === null) return;
+  if (current !== getPasscode()) {
+    alert('That is not the current passcode.');
+    return;
+  }
+  const next = window.prompt('Enter a new passcode:');
+  if (!next) return;
+  state.adminPasscode = next;
+  await saveState();
+  alert('Passcode updated.');
+}
+
+const QUARTER_LABEL = 'Q3 2026';
+const QUARTER_START = new Date('2026-07-01T00:00:00');
+const QUARTER_END = new Date('2026-09-30T23:59:59');
+const YEAR = 2026;
+const YEAR_START = new Date('2026-01-01T00:00:00');
+const YEAR_END = new Date('2026-12-31T23:59:59');
+const QUALIFY_THRESHOLD = 15;
+const PHONE_THRESHOLD = 8;
+const BONUS_THRESHOLD = 2;
+
+let state = { offices: [] };
+let activeAgentEdit = null;
+let activeClosesEdit = null;
+let officeChartInstance = null;
+let agentChartInstance = null;
+let monthChartInstance = null;
+
+function countInRange(closes, start, end) {
+  return closes.filter(ts => {
+    const d = new Date(ts);
+    return d >= start && d <= end;
+  }).length;
+}
+
+function quarterCount(agent) {
+  return countInRange(agent.closes || [], QUARTER_START, QUARTER_END);
+}
+
+function yearCount(agent) {
+  return countInRange(agent.closes || [], YEAR_START, YEAR_END);
+}
+
+function computeStreak(agent) {
+  const closes = agent.closes || [];
+  if (closes.length === 0) return 0;
+  const monthsWithClose = new Set(closes.map(ts => {
+    const d = new Date(ts);
+    return d.getFullYear() + '-' + d.getMonth();
+  }));
+  let streak = 0;
+  const cursor = new Date();
+  while (true) {
+    const key = cursor.getFullYear() + '-' + cursor.getMonth();
+    if (monthsWithClose.has(key)) {
+      streak++;
+      cursor.setMonth(cursor.getMonth() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function streakBadge(agent) {
+  const streak = computeStreak(agent);
+  if (streak >= 2) {
+    return `<span class="streak-badge">\u{1F525} ${streak}-month streak</span>`;
+  }
+  return '';
+}
+
+function defaultState() {
+  return { offices: [], adminPasscode: DEFAULT_PASSCODE };
+}
+
+async function loadState() {
+  try {
+    const response = await fetch(API_URL + '?action=getState');
+    const data = await response.json();
+    if (data && data.offices) {
+      state = data;
+    } else {
+      state = defaultState();
+    }
+  } catch (err) {
+    console.error('Load error', err);
+    state = defaultState();
+  }
+  renderAll();
+}
+
+async function saveState() {
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'save', state: state })
+    });
+  } catch (err) {
+    console.error('Save error', err);
+  }
+}
+
+function fireConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const colors = ['#E0899E', '#D6A756', '#C1637A', '#F8ECD6', '#B7BCC4'];
+  const particles = [];
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * canvas.height * 0.3,
+      w: 6 + Math.random() * 6,
+      h: 6 + Math.random() * 10,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speedY: 2 + Math.random() * 3,
+      speedX: -2 + Math.random() * 4,
+      rotation: Math.random() * 360,
+      rotationSpeed: -8 + Math.random() * 16
+    });
+  }
+  let frame = 0;
+  const maxFrames = 130;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.speedX;
+      p.y += p.speedY;
+      p.rotation += p.rotationSpeed;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < maxFrames) {
+      requestAnimationFrame(animate);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  animate();
+}
+
+function renderExecGrid() {
+  const now = new Date();
+  const daysLeft = Math.max(0, Math.ceil((QUARTER_END - now) / (1000 * 60 * 60 * 24)));
+
+  const allAgents = [];
+  state.offices.forEach(o => o.agents.forEach(a => allAgents.push({ ...a, office: o.name })));
+  const quarterTotal = allAgents.reduce((sum, a) => sum + quarterCount(a), 0);
+  const yearTotal = allAgents.reduce((sum, a) => sum + yearCount(a), 0);
+  const totalOffices = state.offices.length;
+  const totalAgents = allAgents.length;
+
+  let leadingOffice = null;
+  let leadingPct = -1;
+  let avgPct = 0;
+  state.offices.forEach(o => {
+    const total = o.agents.reduce((s, a) => s + quarterCount(a), 0);
+    const goal = Math.max(1, o.agentCount);
+    const pct = total / goal;
+    avgPct += Math.min(1, pct);
+    if (pct > leadingPct) { leadingPct = pct; leadingOffice = o; }
+  });
+  avgPct = totalOffices > 0 ? Math.round((avgPct / totalOffices) * 100) : 0;
+
+  let leadingAgent = null;
+  let leadingAgentCount = -1;
+  allAgents.forEach(a => {
+    const c = quarterCount(a);
+    if (c > leadingAgentCount) { leadingAgentCount = c; leadingAgent = a; }
+  });
+
+  const grid = document.getElementById('execGrid');
+  grid.innerHTML = `
+    <div class="cd-card">
+      <p class="cd-label">${QUARTER_LABEL} ends in</p>
+      <p class="cd-value rust">${daysLeft}d</p>
+    </div>
+    <div class="cd-card">
+      <p class="cd-label">Closed this quarter</p>
+      <p class="cd-value">${quarterTotal}</p>
+    </div>
+    <div class="cd-card">
+      <p class="cd-label">Closed this year</p>
+      <p class="cd-value">${yearTotal}</p>
+    </div>
+    <div class="cd-card">
+      <p class="cd-label">Offices &middot; agents</p>
+      <p class="cd-value" style="font-size:18px;">${totalOffices} &middot; ${totalAgents}</p>
+    </div>
+    <div class="cd-card">
+      <p class="cd-label">Quarter goal avg</p>
+      <p class="cd-value gold">${avgPct}%</p>
+    </div>
+    <div class="cd-card">
+      <p class="cd-label">Leading office</p>
+      <p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingOffice ? escapeHtml(leadingOffice.name) : '\u2014'}</p>
+    </div>
+    <div class="cd-card">
+      <p class="cd-label">Leading agent</p>
+      <p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingAgent && leadingAgentCount > 0 ? escapeHtml(leadingAgent.name) : '\u2014'}</p>
+    </div>
+  `;
+}
+
+function crownIcon() {
+  return '<svg class="icon-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8z"/></svg>';
+}
+
+function agentActionButtons(agent, officeName) {
+  if (!isAdmin) return '';
+  return `
+    <div class="row-actions">
+      <button class="btn secondary edit-agent-btn" data-office="${escapeHtml(officeName)}" data-agent="${escapeHtml(agent.name)}">Edit</button>
+      <button class="btn secondary history-agent-btn" data-office="${escapeHtml(officeName)}" data-agent="${escapeHtml(agent.name)}">History</button>
+      <button class="btn secondary delete-agent-btn" data-office="${escapeHtml(officeName)}" data-agent="${escapeHtml(agent.name)}">Delete</button>
+    </div>
+  `;
+}
+
+function renderPodium(top3) {
+  const container = document.getElementById('podiumRow');
+  if (top3.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
+  const classes = ['first', 'second', 'third'];
+  const order = top3.length >= 2 ? [1, 0, 2] : [0];
+  let html = '<div class="podium-row">';
+  order.forEach(idx => {
+    const agent = top3[idx];
+    if (!agent) return;
+    html += `
+      <div class="podium-card ${classes[idx]}">
+        <div class="podium-medal">${medals[idx]}</div>
+        <p class="podium-name">${escapeHtml(agent.name)}</p>
+        <p class="podium-office">${escapeHtml(agent.office)}${streakBadge(agent)}</p>
+        <p class="podium-count">${agent.referrals}</p>
+        ${agentActionButtons(agent, agent.office)}
+      </div>
+    `;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderIndividual() {
+  const container = document.getElementById('individualList');
+  const allAgents = [];
+  state.offices.forEach(o => {
+    o.agents.forEach(a => {
+      const count = quarterCount(a);
+      if (count > 0) allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
+    });
+  });
+
+  if (allAgents.length === 0) {
+    document.getElementById('podiumRow').innerHTML = '';
+    container.innerHTML = '<div class="empty-state">No closed roofs logged yet this quarter. Log one from the Log a close tab to get the board moving.</div>';
+    return;
+  }
+
+  allAgents.sort((a, b) => b.referrals - a.referrals);
+  const top3 = allAgents.slice(0, 3);
+  const rest = allAgents.slice(3);
+  renderPodium(top3);
+
+  let html = rest.length > 0 ? '<div class="shingle-list">' : '';
+  rest.forEach((agent, i) => {
+    const rank = i + 4;
+    const unlocked = agent.referrals >= BONUS_THRESHOLD;
+    html += `
+      <div class="shingle">
+        <span class="rank-num">${rank}</span>
+        <div class="agent-info">
+          <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
+          <p class="agent-office">${escapeHtml(agent.office)}</p>
+          ${agentActionButtons(agent, agent.office)}
+        </div>
+        ${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
+        <span class="agent-count">${agent.referrals}</span>
+      </div>
+    `;
+  });
+  if (rest.length > 0) html += '</div>';
+  container.innerHTML = html;
+
+  wireAgentButtons();
+}
+
+function wireAgentButtons() {
+  document.querySelectorAll('.edit-agent-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const officeName = btn.dataset.office;
+      const agentName = btn.dataset.agent;
+      const office = state.offices.find(o => o.name === officeName);
+      if (!office) return;
+      const agent = office.agents.find(a => a.name === agentName);
+      if (!agent) return;
+
+      activeAgentEdit = { oldOfficeId: office.id, agentName: agent.name };
+      document.getElementById('modalAgentName').value = agent.name;
+      const officeSelect = document.getElementById('modalOfficeSelect');
+      officeSelect.innerHTML = state.offices
+        .map(o => `<option value="${o.id}" ${o.id === office.id ? 'selected' : ''}>${escapeHtml(o.name)}</option>`)
+        .join('');
+      document.getElementById('agentModal').classList.add('show');
+    });
+  });
+
+  document.querySelectorAll('.delete-agent-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const officeName = btn.dataset.office;
+      const agentName = btn.dataset.agent;
+      const office = state.offices.find(o => o.name === officeName);
+      if (!office) return;
+      const confirmDelete = window.confirm(`Delete ${agentName}? This will also remove all of this agent's closes.`);
+      if (!confirmDelete) return;
+      office.agents = office.agents.filter(a => a.name !== agentName);
+      await saveState();
+      renderAll();
+    });
+  });
+
+  document.querySelectorAll('.history-agent-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openClosesModal(btn.dataset.office, btn.dataset.agent);
+    });
+  });
+}
+
+function openClosesModal(officeName, agentName) {
+  const office = state.offices.find(o => o.name === officeName);
+  if (!office) return;
+  const agent = office.agents.find(a => a.name === agentName);
+  if (!agent) return;
+  if (!agent.closes) agent.closes = [];
+
+  activeClosesEdit = { officeId: office.id, agentName: agent.name };
+  document.getElementById('closesModalTitle').textContent = 'Close history \u2014 ' + agent.name;
+  document.getElementById('newCloseDate').value = '';
+  renderClosesList();
+  document.getElementById('closesModal').classList.add('show');
+}
+
+function renderClosesList() {
+  const listEl = document.getElementById('closesList');
+  if (!activeClosesEdit) return;
+  const office = state.offices.find(o => o.id === activeClosesEdit.officeId);
+  if (!office) return;
+  const agent = office.agents.find(a => a.name === activeClosesEdit.agentName);
+  if (!agent) return;
+
+  if (!agent.closes || agent.closes.length === 0) {
+    listEl.innerHTML = '<p class="status-msg">No closes logged for this agent yet.</p>';
+    return;
+  }
+
+  let html = '';
+  agent.closes.forEach((ts, idx) => {
+    const dateOnly = new Date(ts).toISOString().slice(0, 10);
+    html += `
+      <div class="close-row">
+        <input type="date" value="${dateOnly}" data-idx="${idx}" class="edit-close-date">
+        <button class="btn secondary delete-close-btn" data-idx="${idx}">Delete</button>
+      </div>
+    `;
+  });
+  listEl.innerHTML = html;
+
+  listEl.querySelectorAll('.edit-close-date').forEach(input => {
+    input.addEventListener('change', async () => {
+      const idx = parseInt(input.dataset.idx, 10);
+      if (!input.value) return;
+      agent.closes[idx] = new Date(input.value + 'T12:00:00').toISOString();
+      await saveState();
+      renderAll();
+    });
+  });
+
+  listEl.querySelectorAll('.delete-close-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      const confirmDelete = window.confirm('Delete this close? This cannot be undone.');
+      if (!confirmDelete) return;
+      agent.closes.splice(idx, 1);
+      await saveState();
+      renderClosesList();
+      renderAll();
+    });
+  });
+}
+
+function renderOffices() {
+  const container = document.getElementById('officeList');
+  if (state.offices.length === 0) {
+    container.innerHTML = '<div class="empty-state">No offices added yet. Add one below to start tracking.</div>';
+    return;
+  }
+  const officesWithTotals = state.offices.map(o => {
+    const total = o.agents.reduce((s, a) => s + quarterCount(a), 0);
+    const goal = Math.max(1, o.agentCount);
+    return { ...o, total, goal, pct: Math.min(100, Math.round((total / goal) * 100)) };
+  });
+
+  const maxTotal = Math.max(...officesWithTotals.map(o => o.total));
+  const leaderId = maxTotal > 0 ? officesWithTotals.find(o => o.total === maxTotal).id : null;
+
+  let html = '';
+  officesWithTotals.forEach(o => {
+    const isLeading = o.id === leaderId;
+    const complete = o.total >= o.goal;
+    html += `
+      <div class="office-card ${isLeading ? 'leading' : ''}">
+        <div class="office-head">
+          <span class="office-name">${isLeading ? crownIcon() : ''}${escapeHtml(o.name)}</span>
+          <span class="office-stat">${o.total} / ${o.goal}</span>
+        </div>
+        <p class="office-meta">${o.agentCount} agents &middot; goal: 1 referral per agent</p>
+        <div class="bar-track"><div class="bar-fill ${complete ? 'complete' : ''}" style="width:${o.pct}%"></div></div>
+        ${isAdmin ? `
+        <div class="office-actions">
+          <button class="btn secondary add-agent-btn" data-office-id="${o.id}">+ Agent</button>
+          <button class="btn secondary edit-office-btn" data-office-id="${o.id}">Edit</button>
+          <button class="btn secondary delete-office-btn" data-office-id="${o.id}">Delete</button>
+        </div>
+        ` : ''}
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+
+  document.querySelectorAll('.add-agent-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const office = state.offices.find(o => o.id === btn.dataset.officeId);
+      if (!office) return;
+      const name = window.prompt('New agent name:');
+      if (!name || !name.trim()) return;
+      const exists = office.agents.some(a => a.name.toLowerCase() === name.trim().toLowerCase());
+      if (exists) {
+        alert('That agent already exists in this office.');
+        return;
+      }
+      office.agents.push({ name: name.trim(), closes: [] });
+      await saveState();
+      renderAll();
+    });
+  });
+
+  document.querySelectorAll('.edit-office-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const office = state.offices.find(o => o.id === btn.dataset.officeId);
+      if (!office) return;
+      const newName = window.prompt('Edit office name:', office.name);
+      if (newName === null) return;
+      const newAgentCount = window.prompt('Edit number of agents:', office.agentCount);
+      if (newAgentCount === null) return;
+      const parsedAgentCount = parseInt(newAgentCount, 10);
+      if (!newName.trim() || !parsedAgentCount || parsedAgentCount < 1) {
+        alert('Enter a valid office name and number of agents.');
+        return;
+      }
+      office.name = newName.trim();
+      office.agentCount = parsedAgentCount;
+      await saveState();
+      renderAll();
+    });
+  });
+
+  document.querySelectorAll('.delete-office-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const office = state.offices.find(o => o.id === btn.dataset.officeId);
+      if (!office) return;
+      const confirmDelete = window.confirm(`Delete ${office.name}? This will also delete all agents and closes in this office.`);
+      if (!confirmDelete) return;
+      state.offices = state.offices.filter(o => o.id !== btn.dataset.officeId);
+      await saveState();
+      renderAll();
+    });
+  });
+}
+
+function renderGrand() {
+  const yearEl = document.getElementById('grandYear');
+  if (yearEl) yearEl.textContent = YEAR;
+
+  const container = document.getElementById('grandList');
+  const allAgents = [];
+  state.offices.forEach(o => {
+    o.agents.forEach(a => {
+      const count = yearCount(a);
+      if (count > 0) allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
+    });
+  });
+
+  if (allAgents.length === 0) {
+    container.innerHTML = '<div class="empty-state">No closed roofs logged yet this year. The race for the trip starts with the first close.</div>';
+    return;
+  }
+
+  allAgents.sort((a, b) => b.referrals - a.referrals);
+  const qualifiedLeaderIndex = allAgents.findIndex(a => a.referrals >= QUALIFY_THRESHOLD);
+
+  let html = '<div class="shingle-list">';
+  allAgents.forEach((agent, i) => {
+    const rank = i + 1;
+    const qualified = agent.referrals >= QUALIFY_THRESHOLD;
+    const phoneUnlocked = agent.referrals >= PHONE_THRESHOLD;
+    const isLeader = i === qualifiedLeaderIndex;
+    let badgeHtml;
+    if (qualified) {
+      badgeHtml = '<span class="badge gold">Trip qualified</span>';
+    } else if (phoneUnlocked) {
+      const toTrip = QUALIFY_THRESHOLD - agent.referrals;
+      badgeHtml = `<span class="badge gold">Phone unlocked</span><span class="badge rust">${toTrip} to trip</span>`;
+    } else {
+      const toPhone = PHONE_THRESHOLD - agent.referrals;
+      badgeHtml = `<span class="badge rust">${toPhone} to phone</span>`;
+    }
+    html += `
+      <div class="shingle">
+        <span class="rank-num">${rank}</span>
+        ${isLeader ? crownIcon() : ''}
+        <div class="agent-info">
+          <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
+          <p class="agent-office">${escapeHtml(agent.office)}</p>
+        </div>
+        ${badgeHtml}
+        <span class="agent-count">${agent.referrals}</span>
+      </div>
+    `;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+
+  if (qualifiedLeaderIndex === -1) {
+    container.innerHTML += `<div class="empty-state" style="margin-top:12px;">No one has hit ${QUALIFY_THRESHOLD} closed roofs yet. The trip stays unclaimed until someone qualifies.</div>`;
+  }
+}
+
+function renderCharts() {
+  if (typeof Chart === 'undefined') return;
+  document.getElementById('chartYear').textContent = YEAR;
+
+  const officeLabels = state.offices.map(o => o.name);
+  const officeData = state.offices.map(o => o.agents.reduce((s, a) => s + quarterCount(a), 0));
+
+  const allAgents = [];
+  state.offices.forEach(o => o.agents.forEach(a => allAgents.push({ name: a.name, count: quarterCount(a) })));
+  const topAgents = allAgents.filter(a => a.count > 0).sort((a, b) => b.count - a.count).slice(0, 10);
+
+  const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthTotals = new Array(12).fill(0);
+  state.offices.forEach(o => o.agents.forEach(a => {
+    (a.closes || []).forEach(ts => {
+      const d = new Date(ts);
+      if (d.getFullYear() === YEAR) monthTotals[d.getMonth()]++;
+    });
+  }));
+
+  const roseColor = '#E0899E';
+  const goldColor = '#D6A756';
+  const inkColor = '#4A2F38';
+
+  if (officeChartInstance) officeChartInstance.destroy();
+  officeChartInstance = new Chart(document.getElementById('officeChart'), {
+    type: 'bar',
+    data: { labels: officeLabels, datasets: [{ label: 'Closed roofs', data: officeData, backgroundColor: roseColor, borderRadius: 6 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+
+  if (agentChartInstance) agentChartInstance.destroy();
+  agentChartInstance = new Chart(document.getElementById('agentChart'), {
+    type: 'bar',
+    data: { labels: topAgents.map(a => a.name), datasets: [{ label: 'Closed roofs', data: topAgents.map(a => a.count), backgroundColor: goldColor, borderRadius: 6 }] },
+    options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+
+  if (monthChartInstance) monthChartInstance.destroy();
+  monthChartInstance = new Chart(document.getElementById('monthChart'), {
+    type: 'bar',
+    data: { labels: monthLabels, datasets: [{ label: 'Closed roofs', data: monthTotals, backgroundColor: inkColor, borderRadius: 6 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+}
+
+function renderLogSelect() {
+  const select = document.getElementById('logOfficeSelect');
+  const current = select.value;
+  select.innerHTML = '<option value="">Select office</option>' +
+    state.offices.map(o => `<option value="${o.id}">${escapeHtml(o.name)}</option>`).join('');
+  if (current) select.value = current;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderAll() {
+  renderExecGrid();
+  renderIndividual();
+  renderOffices();
+  renderGrand();
+  renderCharts();
+  renderLogSelect();
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('addOfficeBtn').addEventListener('click', async () => {
+  const nameInput = document.getElementById('newOfficeName');
+  const agentsInput = document.getElementById('newOfficeAgents');
+  const statusEl = document.getElementById('officeFormStatus');
+  const name = nameInput.value.trim();
+  const agentCount = parseInt(agentsInput.value, 10);
+
+  if (!name || !agentCount || agentCount < 1) {
+    statusEl.textContent = 'Enter an office name and a number of agents.';
+    return;
+  }
+
+  state.offices.push({ id: 'office-' + Date.now(), name: name, agentCount: agentCount, agents: [] });
+  statusEl.textContent = 'Saving...';
+  await saveState();
+  nameInput.value = '';
+  agentsInput.value = '';
+  statusEl.textContent = 'Office added.';
+  renderAll();
+  setTimeout(() => { statusEl.textContent = ''; }, 2500);
+});
+
+document.getElementById('logReferralBtn').addEventListener('click', async () => {
+  const officeSelect = document.getElementById('logOfficeSelect');
+  const agentInput = document.getElementById('logAgentName');
+  const statusEl = document.getElementById('logFormStatus');
+  const officeId = officeSelect.value;
+  const agentName = agentInput.value.trim();
+
+  if (!officeId) { statusEl.textContent = 'Select an office first.'; return; }
+  if (!agentName) { statusEl.textContent = 'Enter the agent name.'; return; }
+
+  const office = state.offices.find(o => o.id === officeId);
+  if (!office) { statusEl.textContent = 'Office not found. Try refreshing.'; return; }
+
+  let agent = office.agents.find(a => a.name.toLowerCase() === agentName.toLowerCase());
+  if (!agent) {
+    agent = { name: agentName, closes: [] };
+    office.agents.push(agent);
+  }
+  if (!agent.closes) agent.closes = [];
+
+  const prevQuarter = quarterCount(agent);
+  const prevYear = yearCount(agent);
+  agent.closes.push(new Date().toISOString());
+  const newQuarter = quarterCount(agent);
+  const newYear = yearCount(agent);
+
+  statusEl.textContent = 'Saving...';
+  await saveState();
+  agentInput.value = '';
+  statusEl.textContent = `Closed roof logged for ${agentName}.`;
+  renderAll();
+  setTimeout(() => { statusEl.textContent = ''; }, 2500);
+
+  const crossedBonus = prevQuarter < BONUS_THRESHOLD && newQuarter >= BONUS_THRESHOLD;
+  const crossedPhone = prevYear < PHONE_THRESHOLD && newYear >= PHONE_THRESHOLD;
+  const crossedTrip = prevYear < QUALIFY_THRESHOLD && newYear >= QUALIFY_THRESHOLD;
+  if (crossedBonus || crossedPhone || crossedTrip) fireConfetti();
+});
+
+document.getElementById('adminToggle').addEventListener('click', tryUnlockAdmin);
+document.getElementById('changePasscodeBtn').addEventListener('click', (e) => { e.stopPropagation(); changePasscode(); });
+
+document.getElementById('cancelAgentModalBtn').addEventListener('click', () => {
+  document.getElementById('agentModal').classList.remove('show');
+  activeAgentEdit = null;
+});
+
+document.getElementById('saveAgentModalBtn').addEventListener('click', async () => {
+  if (!activeAgentEdit) return;
+  const newName = document.getElementById('modalAgentName').value.trim();
+  const newOfficeId = document.getElementById('modalOfficeSelect').value;
+  if (!newName) { alert('Agent name is required.'); return; }
+
+  const oldOffice = state.offices.find(o => o.id === activeAgentEdit.oldOfficeId);
+  if (!oldOffice) return;
+  const agent = oldOffice.agents.find(a => a.name === activeAgentEdit.agentName);
+  if (!agent) return;
+
+  agent.name = newName;
+  if (newOfficeId !== oldOffice.id) {
+    const newOffice = state.offices.find(o => o.id === newOfficeId);
+    if (newOffice) {
+      oldOffice.agents = oldOffice.agents.filter(a => a !== agent);
+      newOffice.agents.push(agent);
+    }
+  }
+
+  await saveState();
+  document.getElementById('agentModal').classList.remove('show');
+  activeAgentEdit = null;
+  renderAll();
+});
+
+document.getElementById('closeClosesModalBtn').addEventListener('click', () => {
+  document.getElementById('closesModal').classList.remove('show');
+  activeClosesEdit = null;
+});
+
+document.getElementById('addManualCloseBtn').addEventListener('click', async () => {
+  if (!activeClosesEdit) return;
+  const dateInput = document.getElementById('newCloseDate');
+  if (!dateInput.value) { alert('Pick a date first.'); return; }
+
+  const office = state.offices.find(o => o.id === activeClosesEdit.officeId);
+  if (!office) return;
+  const agent = office.agents.find(a => a.name === activeClosesEdit.agentName);
+  if (!agent) return;
+  if (!agent.closes) agent.closes = [];
+
+  agent.closes.push(new Date(dateInput.value + 'T12:00:00').toISOString());
+  await saveState();
+  dateInput.value = '';
+  renderClosesList();
+  renderAll();
+});
+
+loadState();
+</script>
+</body>
+</html>
