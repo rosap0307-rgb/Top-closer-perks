@@ -433,6 +433,7 @@ function tryUnlockAdmin() {
     isAdmin = false;
     document.body.classList.remove('show-admin');
     document.getElementById('adminToggle').textContent = 'Admin';
+    renderAll();
     return;
   }
   const entered = window.prompt('Enter admin passcode');
@@ -440,6 +441,7 @@ function tryUnlockAdmin() {
     isAdmin = true;
     document.body.classList.add('show-admin');
     document.getElementById('adminToggle').textContent = 'Admin mode on \u00b7 tap to exit';
+    renderAll();
   } else if (entered !== null) {
     alert('That passcode is not right.');
   }
