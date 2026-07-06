@@ -541,8 +541,13 @@ async function loadState() {
 }
 async function saveState() {
   try {
-    const url = API_URL + '?action=saveState&state=' + encodeURIComponent(JSON.stringify(state));
-    await fetch(url);
+    await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'save',
+        state: state
+      })
+    });
   } catch (err) {
     console.error('Save error', err);
   }
