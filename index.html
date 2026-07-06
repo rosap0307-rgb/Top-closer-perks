@@ -472,29 +472,41 @@ function yearCount(agent) {
 function defaultState() {
   return { offices: [] };
 }
-
 async function loadState() {
   try {
-    const result = await window.storage.get(STORAGE_KEY, true);
-    if (result && result.value) {
-      state = JSON.parse(result.value);
+    const response = await fetch(API_URL + '?action=getState');
+    const data = await response.json();
+
+    if (data && data.offices) {
+      state = data;
     } else {
       state = defaultState();
     }
   } catch (err) {
+    console.error('Load error', err);
     state = defaultState();
   }
+
   renderAll();
 }
 
 async function saveState() {
   try {
-    await window.storage.set(STORAGE_KEY, JSON.stringify(state), true);
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'save',
+        state: state
+      })
+    });
   } catch (err) {
-    console.error('Storage error', err);
+    console.error('Save error', err);
   }
 }
-
 function renderCountdown() {
   const now = new Date();
   const msLeft = QUARTER_END - now;
