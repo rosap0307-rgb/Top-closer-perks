@@ -433,10 +433,18 @@ function tryUnlockAdmin() {
     isAdmin = false;
     document.body.classList.remove('show-admin');
     document.getElementById('adminToggle').textContent = 'Admin';
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('[data-tab="individual"]').classList.add('active');
+    document.getElementById('panel-individual').classList.add('active');
+
     renderAll();
     return;
   }
+
   const entered = window.prompt('Enter admin passcode');
+
   if (entered === ADMIN_PASSCODE) {
     isAdmin = true;
     document.body.classList.add('show-admin');
