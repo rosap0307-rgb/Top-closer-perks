@@ -646,55 +646,29 @@ ${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
   html += '</div>';
   container.innerHTML = html;
 document.querySelectorAll('.edit-agent-btn').forEach(btn => {
-  btn.addEventListener('click', async () => {
+  btn.addEventListener('click', () => {
     const officeName = btn.dataset.office;
     const agentName = btn.dataset.agent;
 
-    const oldOffice = state.offices.find(o => o.name === officeName);
-    if (!oldOffice) return;
+    const office = state.offices.find(o => o.name === officeName);
+    if (!office) return;
 
-    const agent = oldOffice.agents.find(a => a.name === agentName);
+    const agent = office.agents.find(a => a.name === agentName);
     if (!agent) return;
 
-    const newName = window.prompt('Edit agent name:', agent.name);
-    if (newName === null) return;
+    activeAgentEdit = {
+      oldOfficeId: office.id,
+      agentName: agent.name
+    };
 
-    if (!newName.trim()) {
-      alert('Agent name cannot be empty.');
-      return;
-    }
+    document.getElementById('modalAgentName').value = agent.name;
 
-    const officeOptions = state.offices.map(o => o.name).join('\n');
-    const newOfficeName = window.prompt(
-      'Move to office. Type one exactly:\n\n' + officeOptions,
-      oldOffice.name
-    );
+    const officeSelect = document.getElementById('modalOfficeSelect');
+    officeSelect.innerHTML = state.offices
+      .map(o => `<option value="${o.id}" ${o.id === office.id ? 'selected' : ''}>${escapeHtml(o.name)}</option>`)
+      .join('');
 
-    if (newOfficeName === null) return;
-
-    const newOffice = state.offices.find(o => o.name.toLowerCase() === newOfficeName.trim().toLowerCase());
-
-    if (!newOffice) {
-      alert('Office not found. Type the office name exactly.');
-      return;
-    }
-
-    agent.name = newName.trim();
-
-    if (newOffice.id !== oldOffice.id) {
-      oldOffice.agents = oldOffice.agents.filter(a => a !== agent);
-
-      const existingAgent = newOffice.agents.find(a => a.name.toLowerCase() === agent.name.toLowerCase());
-
-      if (existingAgent) {
-        existingAgent.closes = [...(existingAgent.closes || []), ...(agent.closes || [])];
-      } else {
-        newOffice.agents.push(agent);
-      }
-    }
-
-    await saveState();
-    renderAll();
+    document.getElementById('agentModal').classList.add('show');
   });
 });
 document.querySelectorAll('.delete-agent-btn').forEach(btn => {
@@ -932,7 +906,44 @@ document.getElementById('logReferralBtn').addEventListener('click', async () => 
 });
 
 document.getElementById('adminToggle').addEventListener('click', tryUnlockAdmin);
+document.getElementById('cancelAgentModalBtn').addEventListener('click', () => {
+  document.getElementById('agentModal').classList.remove('show');
+  activeAgentEdit = null;
+});
 
+document.getElementById('saveAgentModalBtn').addEventListener('click', async () => {
+  if (!activeAgentEdit) return;
+
+  const newName = document.getElementById('modalAgentName').value.trim();
+  const newOfficeId = document.getElementById('modalOfficeSelect').value;
+
+  if (!newName) {
+    alert('Agent name is required.');
+    return;
+  }
+
+  const oldOffice = state.offices.find(o => o.id === activeAgentEdit.oldOfficeId);
+  if (!oldOffice) return;
+
+  const agent = oldOffice.agents.find(a => a.name === activeAgentEdit.agentName);
+  if (!agent) return;
+
+  agent.name = newName;
+
+  if (newOfficeId !== oldOffice.id) {
+    const newOffice = state.offices.find(o => o.id === newOfficeId);
+
+    oldOffice.agents = oldOffice.agents.filter(a => a !== agent);
+    newOffice.agents.push(agent);
+  }
+
+  await saveState();
+
+  document.getElementById('agentModal').classList.remove('show');
+  activeAgentEdit = null;
+
+  renderAll();
+});
 loadState();
 </script>
 </body>
