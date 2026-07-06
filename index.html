@@ -502,6 +502,7 @@ const YEAR_END = new Date('2026-12-31T23:59:59');
 const QUALIFY_THRESHOLD = 15;
 
 let state = { offices: [] };
+  let activeAgentEdit = null;
 
 function countInRange(closes, start, end) {
   return closes.filter(ts => {
@@ -643,17 +644,50 @@ document.querySelectorAll('.edit-agent-btn').forEach(btn => {
   btn.addEventListener('click', async () => {
     const officeName = btn.dataset.office;
     const agentName = btn.dataset.agent;
-    const office = state.offices.find(o => o.name === officeName);
-    if (!office) return;
-    const agent = office.agents.find(a => a.name === agentName);
+
+    const oldOffice = state.offices.find(o => o.name === officeName);
+    if (!oldOffice) return;
+
+    const agent = oldOffice.agents.find(a => a.name === agentName);
     if (!agent) return;
+
     const newName = window.prompt('Edit agent name:', agent.name);
     if (newName === null) return;
+
     if (!newName.trim()) {
       alert('Agent name cannot be empty.');
       return;
     }
+
+    const officeOptions = state.offices.map(o => o.name).join('\n');
+    const newOfficeName = window.prompt(
+      'Move to office. Type one exactly:\n\n' + officeOptions,
+      oldOffice.name
+    );
+
+    if (newOfficeName === null) return;
+
+    const newOffice = state.offices.find(o => o.name.toLowerCase() === newOfficeName.trim().toLowerCase());
+
+    if (!newOffice) {
+      alert('Office not found. Type the office name exactly.');
+      return;
+    }
+
     agent.name = newName.trim();
+
+    if (newOffice.id !== oldOffice.id) {
+      oldOffice.agents = oldOffice.agents.filter(a => a !== agent);
+
+      const existingAgent = newOffice.agents.find(a => a.name.toLowerCase() === agent.name.toLowerCase());
+
+      if (existingAgent) {
+        existingAgent.closes = [...(existingAgent.closes || []), ...(agent.closes || [])];
+      } else {
+        newOffice.agents.push(agent);
+      }
+    }
+
     await saveState();
     renderAll();
   });
