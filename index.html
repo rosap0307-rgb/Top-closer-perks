@@ -29,6 +29,8 @@
     --bronze: #C08A5C;
     --line: #F1DCE2;
     --line-strong: #E7C2CD;
+    --bar-neutral: #DCD5D0;
+    --avatar-bg: #EFE3D8;
   }
   body.dark {
     --bg: #241A1E;
@@ -45,6 +47,8 @@
     --bronze: #8A6647;
     --line: #3E2C33;
     --line-strong: #55394A;
+    --bar-neutral: #4A3F44;
+    --avatar-bg: #4A3226;
   }
   * { box-sizing: border-box; }
   body {
@@ -182,10 +186,26 @@
  
   .shingle-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
   .shingle {
-    position: relative; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--rose-tint);
+    position: relative; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--line-strong);
     border-radius: 14px; padding: 13px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
     box-shadow: 0 3px 10px rgba(224,137,158,0.07); transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
+  .shingle.leader { border-left-color: var(--gold); background: linear-gradient(90deg, var(--gold-tint), var(--card) 45%); }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
+    background: var(--avatar-bg); display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-weight: 700; font-size: 14px; color: var(--rose-dark);
+    border: 1px solid var(--line-strong);
+  }
+  .avatar-lg { width: 56px; height: 56px; font-size: 20px; margin: 0 auto 8px; }
+  .logo-icon {
+    width: 22px; height: 22px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
+    background: var(--avatar-bg); display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; border: 1px solid var(--line-strong);
+  }
+  .mini-bar-track { height: 6px; background: var(--bar-neutral); border-radius: 10px; overflow: hidden; margin: 6px 0 2px; width: 100%; }
+  .mini-bar-fill { height: 100%; background: var(--rose); border-radius: 10px; transition: width 0.5s ease; }
+  .mini-bar-label { font-size: 10px; color: var(--muted); font-family: 'Quicksand', sans-serif; }
   .shingle:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(224,137,158,0.14); }
   .rank-num { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 13px; color: var(--muted); width: 20px; flex-shrink: 0; }
   .agent-info { flex: 1; min-width: 140px; }
@@ -194,7 +214,7 @@
   .agent-count { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 700; color: var(--ink); min-width: 30px; text-align: right; }
   .badge { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.03em; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; }
   .badge.gold { background: var(--gold-tint); color: var(--gold-dark); }
-  .badge.rust { background: var(--rose-tint); color: var(--rose-dark); }
+  .badge.rust { background: rgba(120,120,120,0.14); color: var(--muted); }
   .icon-crown { width: 15px; height: 15px; flex-shrink: 0; color: var(--gold-dark); }
  
   .row-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -208,8 +228,8 @@
   .office-stat { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 13px; color: var(--muted); }
   .office-meta { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
   .office-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-  .bar-track { height: 9px; background: var(--rose-tint); border-radius: 20px; overflow: hidden; margin-bottom: 2px; }
-  .bar-fill { height: 100%; background: var(--rose); border-radius: 20px; transition: width 0.5s ease; }
+  .bar-track { height: 9px; background: var(--bar-neutral); border-radius: 20px; overflow: hidden; margin-bottom: 2px; }
+  .bar-fill { height: 100%; background: var(--muted); border-radius: 20px; transition: width 0.5s ease; }
   .office-card.leading .bar-fill { background: var(--gold); }
   .bar-fill.complete { background: var(--gold); }
  
@@ -330,15 +350,17 @@
   </div>
  
   <div class="tabs">
-    <button class="tab-btn active" data-tab="individual">Individual</button>
-    <button class="tab-btn" data-tab="offices">Offices</button>
-    <button class="tab-btn" data-tab="grand">Grand prize</button>
+    <button class="tab-btn active" data-tab="individual">👤 Individual</button>
+    <button class="tab-btn" data-tab="offices">🏢 Offices</button>
+    <button class="tab-btn" data-tab="grand">✈️ Grand prize</button>
     <button class="tab-btn" data-tab="charts">Charts</button>
     <button class="tab-btn admin-only" data-tab="log">Log a close</button>
   </div>
  
   <div class="panel active" id="panel-individual">
     <p class="section-title" id="individualTitle">Top closers this quarter</p>
+    <p class="cd-label" style="margin-bottom:14px;">1st closed roof: gift card &middot; 2nd+ this quarter: dinner for two or an activity &middot; 8+ this year: phone &middot; 15+ this year: Colorado trip</p>
+    <div class="stats-grid" id="highlightsGrid"></div>
     <div id="podiumRow"></div>
     <div id="individualList"><div class="loading">Loading board...</div></div>
   </div>
@@ -353,6 +375,9 @@
         <input type="text" id="newOfficeName" placeholder="Office name">
         <input type="number" id="newOfficeAgents" placeholder="Number of agents" min="1">
       </div>
+      <div class="form-row">
+        <input type="text" id="newOfficeLogo" placeholder="Logo image URL (optional)">
+      </div>
       <button class="btn secondary" id="addOfficeBtn">Add office</button>
       <p class="status-msg" id="officeFormStatus"></p>
     </div>
@@ -360,12 +385,15 @@
  
   <div class="panel" id="panel-grand">
     <div class="prize-banner">
-      <p class="prize-eyebrow">Year-end grand prize</p>
+      <p class="prize-eyebrow">✈️ Year-end grand prize</p>
       <p class="prize-title">4-day trip &middot; flight and hotel included</p>
       <p class="prize-desc">Plus a spa day and a ski lesson. Open only to agents with 15+ closed roofs referred to Rosa in <span id="grandYear"></span>. Awarded to whoever has the most. Hit 8+ in the year and unlock a new phone along the way.</p>
     </div>
     <p class="section-title" style="margin-top:22px;">Annual leaderboard</p>
     <div id="grandList"><div class="loading">Loading board...</div></div>
+    <hr class="divider">
+    <p class="section-title" style="font-size:16px;">🏆 Hall of Fame — quarterly winners</p>
+    <div id="hallOfFame"></div>
   </div>
  
   <div class="panel" id="panel-charts">
@@ -405,6 +433,7 @@
     <div class="modal-card">
       <p class="section-title">Edit agent</p>
       <div class="form-row"><input type="text" id="modalAgentName" placeholder="Agent name"></div>
+      <div class="form-row"><input type="text" id="modalAgentPhoto" placeholder="Photo URL (optional)"></div>
       <div class="form-row"><select id="modalOfficeSelect"></select></div>
       <div style="display:flex;gap:8px;margin-top:12px;">
         <button class="btn" id="saveAgentModalBtn">Save</button>
@@ -721,14 +750,56 @@ function renderExecGrid() {
     <div class="cd-card"><p class="cd-label">Leading office</p><p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingOffice ? escapeHtml(leadingOffice.name) : '\u2014'}</p></div>
     <div class="cd-card"><p class="cd-label">Leading agent</p><p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingAgent && leadingAgentCount > 0 ? escapeHtml(leadingAgent.name) : '\u2014'}</p></div>
   `;
-  document.getElementById('individualTitle').textContent = 'Top closers \u2014 ' + qLabel;
-  document.getElementById('officesTitle').textContent = 'Office race \u2014 ' + qLabel;
+  document.getElementById('individualTitle').textContent = '\u{1F464} Top closers \u2014 ' + qLabel;
+  document.getElementById('officesTitle').textContent = '\u{1F3E2} Office race \u2014 ' + qLabel;
   document.getElementById('officeChartTitle').textContent = 'Closed roofs by office (' + qLabel + ')';
   document.getElementById('agentChartTitle').textContent = 'Top agents (' + qLabel + ')';
 }
  
 function crownIcon() {
   return '<svg class="icon-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8z"/></svg>';
+}
+ 
+function initials(name) {
+  return (name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
+}
+ 
+function avatarHtml(name, photoUrl, big) {
+  const sizeClass = big ? 'avatar avatar-lg' : 'avatar';
+  const init = initials(name);
+  if (photoUrl) {
+    return `<div class="${sizeClass}" style="position:relative;overflow:hidden;">${init}<img src="${escapeHtml(photoUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.remove()"></div>`;
+  }
+  return `<div class="${sizeClass}">${init}</div>`;
+}
+ 
+function logoHtml(logoUrl) {
+  if (logoUrl) {
+    return `<span class="logo-icon" style="position:relative;overflow:hidden;">\u{1F3E2}<img src="${escapeHtml(logoUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:6px;" onerror="this.remove()"></span>`;
+  }
+  return `<span class="logo-icon">\u{1F3E2}</span>`;
+}
+ 
+function miniProgressBar(current, target, label) {
+  const pct = Math.min(100, Math.round((current / target) * 100));
+  return `<div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pct}%"></div></div><p class="mini-bar-label">${escapeHtml(label)}</p>`;
+}
+ 
+function animateCounts(selector) {
+  document.querySelectorAll(selector).forEach(el => {
+    const target = parseInt(el.textContent, 10);
+    if (isNaN(target)) return;
+    const duration = 500;
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min(1, (now - start) / duration);
+      el.textContent = Math.floor(progress * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    el.textContent = '0';
+    requestAnimationFrame(step);
+  });
 }
  
 function agentActionButtons(agent, officeName) {
@@ -753,12 +824,15 @@ function renderPodium(top3) {
     const agent = top3[idx];
     if (!agent) return;
     const crownLabel = idx === 0 ? '<p class="podium-office" style="margin-top:2px;">\u{1F451} Top Closer of the Quarter</p>' : '';
+    const progress = agent.referrals < BONUS_THRESHOLD ? miniProgressBar(agent.referrals, BONUS_THRESHOLD, `${agent.referrals}/${BONUS_THRESHOLD} to dinner for two`) : '';
     html += `
       <div class="podium-card ${classes[idx]}">
         <div class="podium-medal">${medals[idx]}</div>
+        ${avatarHtml(agent.name, agent.photoUrl, true)}
         <p class="podium-name">${escapeHtml(agent.name)}</p>
         <p class="podium-office">${escapeHtml(agent.office)}${streakBadge(agent)}</p>
         <p class="podium-count">${agent.referrals}</p>
+        ${progress}
         ${crownLabel}
         ${achievementsRow(agent)}
         ${agentActionButtons(agent, agent.office)}
@@ -767,6 +841,7 @@ function renderPodium(top3) {
   });
   html += '</div>';
   container.innerHTML = html;
+  animateCounts('.podium-count');
 }
  
 function renderIndividual() {
@@ -776,7 +851,7 @@ function renderIndividual() {
   state.offices.forEach(o => {
     o.agents.forEach(a => {
       const count = quarterCount(a);
-      allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
+      allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes, photoUrl: a.photoUrl });
     });
   });
  
@@ -791,15 +866,18 @@ function renderIndividual() {
     let html = '<div class="shingle-list">';
     matches.forEach(agent => {
       const unlocked = agent.referrals >= BONUS_THRESHOLD;
+      const progress = !unlocked ? miniProgressBar(agent.referrals, BONUS_THRESHOLD, `${agent.referrals}/${BONUS_THRESHOLD} to dinner for two`) : '';
       html += `
         <div class="shingle">
+          ${avatarHtml(agent.name, agent.photoUrl, false)}
           <div class="agent-info">
             <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
             <p class="agent-office">${escapeHtml(agent.office)}</p>
+            ${progress}
             ${achievementsRow(agent, true)}
             ${agentActionButtons(agent, agent.office)}
           </div>
-          ${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
+          ${unlocked ? '<span class="badge gold">\u{1F37D}\uFE0F Dinner for two unlocked</span>' : ''}
           <span class="agent-count">${agent.referrals}</span>
         </div>
       `;
@@ -807,10 +885,12 @@ function renderIndividual() {
     html += '</div>';
     container.innerHTML = html;
     wireAgentButtons();
+    animateCounts('.agent-count');
     return;
   }
  
   allAgents = allAgents.filter(a => a.referrals > 0);
+  renderHighlights();
   if (allAgents.length === 0) {
     podiumEl.innerHTML = '';
     container.innerHTML = `<div class="empty-state">No closed roofs logged for ${QUARTERS[selectedQuarterIndex].label}.</div>`;
@@ -826,16 +906,19 @@ function renderIndividual() {
   rest.forEach((agent, i) => {
     const rank = i + 4;
     const unlocked = agent.referrals >= BONUS_THRESHOLD;
+    const progress = !unlocked ? miniProgressBar(agent.referrals, BONUS_THRESHOLD, `${agent.referrals}/${BONUS_THRESHOLD} to dinner for two`) : '';
     html += `
       <div class="shingle">
         <span class="rank-num">${rank}</span>
+        ${avatarHtml(agent.name, agent.photoUrl, false)}
         <div class="agent-info">
           <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
           <p class="agent-office">${escapeHtml(agent.office)}</p>
+          ${progress}
           ${achievementsRow(agent, true)}
           ${agentActionButtons(agent, agent.office)}
         </div>
-        ${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
+        ${unlocked ? '<span class="badge gold">\u{1F37D}\uFE0F Dinner for two unlocked</span>' : ''}
         <span class="agent-count">${agent.referrals}</span>
       </div>
     `;
@@ -843,6 +926,7 @@ function renderIndividual() {
   if (rest.length > 0) html += '</div>';
   container.innerHTML = html;
   wireAgentButtons();
+  animateCounts('.agent-count');
 }
  
 function wireAgentButtons() {
@@ -854,6 +938,7 @@ function wireAgentButtons() {
       if (!agent) return;
       activeAgentEdit = { oldOfficeId: office.id, agentName: agent.name };
       document.getElementById('modalAgentName').value = agent.name;
+      document.getElementById('modalAgentPhoto').value = agent.photoUrl || '';
       const officeSelect = document.getElementById('modalOfficeSelect');
       officeSelect.innerHTML = state.offices.map(o => `<option value="${o.id}" ${o.id === office.id ? 'selected' : ''}>${escapeHtml(o.name)}</option>`).join('');
       document.getElementById('agentModal').classList.add('show');
@@ -950,7 +1035,7 @@ function renderOffices() {
     html += `
       <div class="office-card ${isLeading ? 'leading' : ''}">
         <div class="office-head">
-          <span class="office-name">${isLeading ? crownIcon() : ''}${escapeHtml(o.name)}</span>
+          <span class="office-name">${logoHtml(o.logoUrl)}${isLeading ? crownIcon() : ''}${escapeHtml(o.name)}</span>
           <span class="office-stat">${o.total} / ${o.goal}</span>
         </div>
         <p class="office-meta">${o.agentCount} agents &middot; goal: 1 referral per agent</p>
@@ -973,7 +1058,8 @@ function renderOffices() {
       const name = window.prompt('New agent name:');
       if (!name || !name.trim()) return;
       if (office.agents.some(a => a.name.toLowerCase() === name.trim().toLowerCase())) { alert('That agent already exists in this office.'); return; }
-      office.agents.push({ name: name.trim(), closes: [] });
+      const photoUrl = window.prompt('Photo URL (optional, leave blank for none):', '') || '';
+      office.agents.push({ name: name.trim(), photoUrl: photoUrl.trim(), closes: [] });
       await saveState();
       renderAll();
     });
@@ -986,10 +1072,13 @@ function renderOffices() {
       if (newName === null) return;
       const newAgentCount = window.prompt('Edit number of agents:', office.agentCount);
       if (newAgentCount === null) return;
+      const newLogo = window.prompt('Logo image URL (leave blank for none):', office.logoUrl || '');
+      if (newLogo === null) return;
       const parsedAgentCount = parseInt(newAgentCount, 10);
       if (!newName.trim() || !parsedAgentCount || parsedAgentCount < 1) { alert('Enter a valid office name and number of agents.'); return; }
       office.name = newName.trim();
       office.agentCount = parsedAgentCount;
+      office.logoUrl = newLogo.trim();
       await saveState();
       renderAll();
     });
@@ -1012,11 +1101,12 @@ function renderGrand() {
   const allAgents = [];
   state.offices.forEach(o => o.agents.forEach(a => {
     const count = yearCount(a);
-    if (count > 0) allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
+    if (count > 0) allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes, photoUrl: a.photoUrl });
   }));
  
   if (allAgents.length === 0) {
     container.innerHTML = '<div class="empty-state">No closed roofs logged yet this year. The race for the trip starts with the first close.</div>';
+    renderHallOfFame();
     return;
   }
   allAgents.sort((a, b) => b.referrals - a.referrals);
@@ -1027,17 +1117,26 @@ function renderGrand() {
     const qualified = agent.referrals >= QUALIFY_THRESHOLD;
     const phoneUnlocked = agent.referrals >= PHONE_THRESHOLD;
     const isLeader = i === qualifiedLeaderIndex;
-    let badgeHtml;
-    if (qualified) badgeHtml = '<span class="badge gold">Trip qualified</span>';
-    else if (phoneUnlocked) badgeHtml = `<span class="badge gold">Phone unlocked</span><span class="badge rust">${QUALIFY_THRESHOLD - agent.referrals} to trip</span>`;
-    else badgeHtml = `<span class="badge rust">${PHONE_THRESHOLD - agent.referrals} to phone</span>`;
+    let badgeHtml, progress;
+    if (qualified) {
+      badgeHtml = '<span class="badge gold">Trip qualified</span>';
+      progress = '';
+    } else if (phoneUnlocked) {
+      badgeHtml = `<span class="badge gold">Phone unlocked</span><span class="badge rust">${QUALIFY_THRESHOLD - agent.referrals} to trip</span>`;
+      progress = miniProgressBar(agent.referrals, QUALIFY_THRESHOLD, `${agent.referrals}/${QUALIFY_THRESHOLD} to trip`);
+    } else {
+      badgeHtml = `<span class="badge rust">${PHONE_THRESHOLD - agent.referrals} to phone</span>`;
+      progress = miniProgressBar(agent.referrals, PHONE_THRESHOLD, `${agent.referrals}/${PHONE_THRESHOLD} to phone`);
+    }
     html += `
-      <div class="shingle">
+      <div class="shingle ${isLeader ? 'leader' : ''}">
         <span class="rank-num">${i + 1}</span>
+        ${avatarHtml(agent.name, agent.photoUrl, false)}
         ${isLeader ? crownIcon() : ''}
         <div class="agent-info">
           <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
           <p class="agent-office">${escapeHtml(agent.office)}</p>
+          ${progress}
           ${achievementsRow(agent, true)}
         </div>
         ${badgeHtml}
@@ -1050,6 +1149,76 @@ function renderGrand() {
   if (qualifiedLeaderIndex === -1) {
     container.innerHTML += `<div class="empty-state" style="margin-top:12px;">No one has hit ${QUALIFY_THRESHOLD} closed roofs yet. The trip stays unclaimed until someone qualifies.</div>`;
   }
+  animateCounts('.agent-count');
+  renderHallOfFame();
+}
+ 
+function renderHighlights() {
+  const grid = document.getElementById('highlightsGrid');
+  if (!grid) return;
+  const now = new Date();
+  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+ 
+  const allAgents = [];
+  state.offices.forEach(o => o.agents.forEach(a => allAgents.push({ name: a.name, office: o.name, closes: a.closes || [] })));
+ 
+  let weekLeader = null, weekLeaderCount = 0;
+  let climber = null, climberDelta = 0;
+  allAgents.forEach(a => {
+    const thisWeek = countInRange(a.closes, weekAgo, now);
+    const lastWeek = countInRange(a.closes, twoWeeksAgo, weekAgo);
+    if (thisWeek > weekLeaderCount) { weekLeaderCount = thisWeek; weekLeader = a; }
+    const delta = thisWeek - lastWeek;
+    if (delta > climberDelta) { climberDelta = delta; climber = a; }
+  });
+ 
+  let nextMilestoneAgent = null, nextMilestoneGap = Infinity, nextMilestoneLabel = '';
+  allAgents.forEach(a => {
+    const total = countInRange(a.closes, YEAR_START, YEAR_END);
+    if (total === 0) return;
+    let gap, label;
+    if (total < PHONE_THRESHOLD) { gap = PHONE_THRESHOLD - total; label = 'phone'; }
+    else if (total < QUALIFY_THRESHOLD) { gap = QUALIFY_THRESHOLD - total; label = 'the Colorado trip'; }
+    else return;
+    if (gap < nextMilestoneGap) { nextMilestoneGap = gap; nextMilestoneAgent = a; nextMilestoneLabel = label; }
+  });
+ 
+  grid.innerHTML = `
+    <div class="cd-card"><p class="cd-label">\u{1F525} Agent of the week</p><p class="cd-value gold" style="font-size:16px;">${weekLeader && weekLeaderCount > 0 ? escapeHtml(weekLeader.name) : '\u2014'}</p></div>
+    <div class="cd-card"><p class="cd-label">\u{1F4C8} Biggest climber</p><p class="cd-value gold" style="font-size:16px;">${climber && climberDelta > 0 ? escapeHtml(climber.name) + ' (+' + climberDelta + ')' : '\u2014'}</p></div>
+    <div class="cd-card"><p class="cd-label">\u{1F3AF} Next milestone</p><p class="cd-value" style="font-size:14px; line-height:1.3;">${nextMilestoneAgent ? escapeHtml(nextMilestoneAgent.name) + ' \u2014 ' + nextMilestoneGap + ' to ' + nextMilestoneLabel : '\u2014'}</p></div>
+  `;
+}
+ 
+function renderHallOfFame() {
+  const container = document.getElementById('hallOfFame');
+  if (!container) return;
+  const rows = [];
+  QUARTERS.forEach((q, idx) => {
+    if (idx > CURRENT_QUARTER_INDEX) return;
+    let topAgent = null, topCount = 0;
+    state.offices.forEach(o => o.agents.forEach(a => {
+      const count = countInRange(a.closes || [], q.start, q.end);
+      if (count > topCount) { topCount = count; topAgent = a.name; }
+    }));
+    if (topAgent) rows.push({ label: q.label, agent: topAgent, count: topCount });
+  });
+ 
+  if (rows.length === 0) {
+    container.innerHTML = '<div class="empty-state">No quarters completed with closed roofs yet.</div>';
+    return;
+  }
+ 
+  container.innerHTML = '<div class="shingle-list">' + rows.map(r => `
+    <div class="shingle">
+      <div class="agent-info">
+        <p class="agent-name">${escapeHtml(r.label)}</p>
+        <p class="agent-office">${escapeHtml(r.agent)}</p>
+      </div>
+      <span class="agent-count">${r.count}</span>
+    </div>
+  `).join('') + '</div>';
 }
  
 function renderAdvancedStats() {
@@ -1207,14 +1376,15 @@ document.getElementById('exitPresentationBtn').addEventListener('click', stopPre
 document.getElementById('addOfficeBtn').addEventListener('click', async () => {
   const nameInput = document.getElementById('newOfficeName');
   const agentsInput = document.getElementById('newOfficeAgents');
+  const logoInput = document.getElementById('newOfficeLogo');
   const statusEl = document.getElementById('officeFormStatus');
   const name = nameInput.value.trim();
   const agentCount = parseInt(agentsInput.value, 10);
   if (!name || !agentCount || agentCount < 1) { statusEl.textContent = 'Enter an office name and a number of agents.'; return; }
-  state.offices.push({ id: 'office-' + Date.now(), name: name, agentCount: agentCount, agents: [] });
+  state.offices.push({ id: 'office-' + Date.now(), name: name, agentCount: agentCount, logoUrl: logoInput.value.trim(), agents: [] });
   statusEl.textContent = 'Saving...';
   await saveState();
-  nameInput.value = ''; agentsInput.value = '';
+  nameInput.value = ''; agentsInput.value = ''; logoInput.value = '';
   statusEl.textContent = 'Office added.';
   renderAll();
   setTimeout(() => { statusEl.textContent = ''; }, 2500);
@@ -1273,6 +1443,7 @@ document.getElementById('cancelAgentModalBtn').addEventListener('click', () => {
 document.getElementById('saveAgentModalBtn').addEventListener('click', async () => {
   if (!activeAgentEdit) return;
   const newName = document.getElementById('modalAgentName').value.trim();
+  const newPhotoUrl = document.getElementById('modalAgentPhoto').value.trim();
   const newOfficeId = document.getElementById('modalOfficeSelect').value;
   if (!newName) { alert('Agent name is required.'); return; }
   const oldOffice = state.offices.find(o => o.id === activeAgentEdit.oldOfficeId);
@@ -1280,6 +1451,7 @@ document.getElementById('saveAgentModalBtn').addEventListener('click', async () 
   const agent = oldOffice.agents.find(a => a.name === activeAgentEdit.agentName);
   if (!agent) return;
   agent.name = newName;
+  agent.photoUrl = newPhotoUrl;
   if (newOfficeId !== oldOffice.id) {
     const newOffice = state.offices.find(o => o.id === newOfficeId);
     if (newOffice) { oldOffice.agents = oldOffice.agents.filter(a => a !== agent); newOffice.agents.push(agent); }
