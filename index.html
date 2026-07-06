@@ -489,24 +489,15 @@ async function loadState() {
 
   renderAll();
 }
-
 async function saveState() {
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        action: 'save',
-        state: state
-      })
-    });
+    const url = API_URL + '?action=saveState&state=' + encodeURIComponent(JSON.stringify(state));
+    await fetch(url);
   } catch (err) {
     console.error('Save error', err);
   }
 }
+
 function renderCountdown() {
   const now = new Date();
   const msLeft = QUARTER_END - now;
