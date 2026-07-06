@@ -25,6 +25,22 @@
     --line: #F1DCE2;
     --line-strong: #E7C2CD;
   }
+  body.dark {
+    --bg: #241A1E;
+    --card: #2F2329;
+    --ink: #F3E7EA;
+    --muted: #C9A8B2;
+    --rose: #EBA0B2;
+    --rose-dark: #F1B8C6;
+    --rose-tint: #402A31;
+    --gold: #E6BB74;
+    --gold-dark: #F0CE96;
+    --gold-tint: #3D3020;
+    --silver: #8D939C;
+    --bronze: #8A6647;
+    --line: #3E2C33;
+    --line-strong: #55394A;
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -32,131 +48,103 @@
     color: var(--ink);
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.2s, color 0.2s;
   }
   .wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
   #confettiCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 3000; }
-  .eyebrow {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--rose-dark);
-    margin: 0 0 6px;
+ 
+  .welcome-screen {
+    position: fixed; inset: 0; z-index: 5000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, var(--bg), var(--gold-tint) 120%);
+    text-align: center; padding: 20px;
   }
-  h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-style: italic;
-    font-size: 38px;
-    letter-spacing: 0.01em;
-    margin: 0 0 6px;
-    color: var(--ink);
+  .welcome-screen.hide { display: none; }
+  .welcome-eyebrow { font-family:'Quicksand',sans-serif; font-weight:600; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:var(--rose-dark); margin-bottom:10px; }
+  .welcome-title { font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:46px; color:var(--ink); margin:0 0 6px; }
+  .welcome-quarter { font-family:'Quicksand',sans-serif; font-weight:600; font-size:14px; color:var(--muted); margin-bottom:26px; }
+  .welcome-tag { font-family:'Quicksand',sans-serif; font-weight:700; font-size:16px; color:var(--gold-dark); margin-bottom:30px; }
+  .welcome-enter-btn {
+    font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px;
+    background:var(--rose); color:#fff; border:none; padding:14px 32px;
+    border-radius:30px; cursor:pointer; transition:transform 0.15s, background 0.15s;
   }
-  .sub { font-size: 14px; color: var(--muted); margin: 0 0 20px; }
+  .welcome-enter-btn:hover { background:var(--rose-dark); transform:translateY(-2px); }
  
   .celebration-toast {
-    position: fixed;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
     background: linear-gradient(135deg, var(--gold-tint), var(--card) 70%);
-    border: 1px solid var(--gold);
-    border-radius: 16px;
-    padding: 14px 22px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    z-index: 4000;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--ink);
-    max-width: 90vw;
-    text-align: center;
-    transition: top 0.4s ease;
+    border: 1px solid var(--gold); border-radius: 16px; padding: 14px 22px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18); z-index: 4000;
+    font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 14px;
+    color: var(--ink); max-width: 90vw; text-align: center; transition: top 0.4s ease;
   }
   .celebration-toast.show { top: 20px; }
  
-  .exec-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
-    margin-bottom: 16px;
+  .header-row { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
+  .theme-toggle {
+    background: var(--card); border: 1px solid var(--line-strong); border-radius: 20px;
+    padding: 8px 14px; font-size: 15px; cursor: pointer; color: var(--ink);
   }
-  .cd-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 14px 16px;
-    box-shadow: 0 4px 14px rgba(224,137,158,0.08);
+  .eyebrow {
+    font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose-dark); margin: 0 0 6px;
   }
-  .cd-label {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 6px;
+  h1 {
+    font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+    font-size: 38px; letter-spacing: 0.01em; margin: 0 0 6px; color: var(--ink);
   }
-  .cd-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--ink);
-    margin: 0;
-    line-height: 1.2;
-  }
+  .sub { font-size: 14px; color: var(--muted); margin: 0 0 20px; }
+ 
+  .exec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .cd-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; box-shadow: 0 4px 14px rgba(224,137,158,0.08); }
+  .cd-label { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+  .cd-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--ink); margin: 0; line-height: 1.2; }
   .cd-value.rust { color: var(--rose-dark); }
   .cd-value.gold { color: var(--gold-dark); }
  
-  .toolbar-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  .quarter-select-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Quicksand', sans-serif;
-    font-size: 12px;
-    color: var(--muted);
-  }
+  .toolbar-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .quarter-select-row { display: flex; align-items: center; gap: 8px; font-family: 'Quicksand', sans-serif; font-size: 12px; color: var(--muted); }
   .quarter-select-row select {
-    background: var(--card);
-    border: 1px solid var(--line-strong);
-    color: var(--ink);
-    padding: 6px 10px;
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    background: var(--card); border: 1px solid var(--line-strong); color: var(--ink);
+    padding: 6px 10px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 13px;
   }
+  .search-row { margin-bottom: 18px; }
+  .search-row input {
+    width: 100%; background: var(--card); border: 1px solid var(--line-strong); color: var(--ink);
+    padding: 10px 14px; border-radius: 20px; font-family: 'Inter', sans-serif; font-size: 13px;
+  }
+  .search-row input::placeholder { color: var(--muted); }
  
-  .tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 22px;
-    border-bottom: 1px solid var(--line-strong);
-    overflow-x: auto;
+  .presentation-btn {
+    font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 12px;
+    background: var(--card); border: 1px solid var(--line-strong); color: var(--rose-dark);
+    padding: 8px 14px; border-radius: 20px; cursor: pointer;
   }
+  .exit-presentation-btn {
+    position: fixed; top: 16px; right: 16px; z-index: 2500;
+    font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 12px;
+    background: var(--card); border: 1px solid var(--line-strong); color: var(--rose-dark);
+    padding: 8px 16px; border-radius: 20px; cursor: pointer; display: none;
+  }
+  body.presentation .exit-presentation-btn { display: block; }
+  body.presentation .toolbar-row,
+  body.presentation .tabs,
+  body.presentation .admin-only,
+  body.presentation .search-row,
+  body.presentation .header-row .theme-toggle,
+  body.presentation .presentation-btn { display: none !important; }
+  body.presentation .wrap { max-width: 1000px; padding-top: 50px; }
+  body.presentation h1 { font-size: 54px; }
+  body.presentation .exec-grid { grid-template-columns: repeat(4, 1fr); }
+  body.presentation .panel.active { display: block !important; }
+ 
+  .tabs { display: flex; gap: 4px; margin-bottom: 22px; border-bottom: 1px solid var(--line-strong); overflow-x: auto; }
   .tab-btn {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.03em;
-    background: none;
-    border: none;
-    color: var(--muted);
-    padding: 10px 6px;
-    margin-right: 18px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s;
-    white-space: nowrap;
-    flex-shrink: 0;
+    font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.03em;
+    background: none; border: none; color: var(--muted); padding: 10px 6px; margin-right: 18px;
+    cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s;
+    white-space: nowrap; flex-shrink: 0;
   }
   .tab-btn.active { color: var(--rose-dark); border-bottom-color: var(--rose); }
   .tab-btn:hover { color: var(--rose-dark); }
@@ -165,119 +153,41 @@
   .panel.active { display: block; animation: fadeIn 0.25s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
  
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 19px;
-    font-weight: 700;
-    font-style: italic;
-    margin: 0 0 14px;
-    color: var(--ink);
-  }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; font-style: italic; margin: 0 0 14px; color: var(--ink); }
  
-  .podium-row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
+  .podium-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 24px; }
   .podium-card {
-    flex: 1;
-    max-width: 180px;
-    text-align: center;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 16px 10px;
-    box-shadow: 0 4px 14px rgba(224,137,158,0.1);
-    animation: podiumIn 0.5s ease-out;
-    transition: transform 0.2s ease;
+    flex: 1; max-width: 180px; text-align: center; background: var(--card); border: 1px solid var(--line);
+    border-radius: 16px; padding: 16px 10px; box-shadow: 0 4px 14px rgba(224,137,158,0.1);
+    animation: podiumIn 0.5s ease-out; transition: transform 0.2s ease;
   }
   .podium-card:hover { transform: translateY(-3px); }
-  @keyframes podiumIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes podiumIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   .podium-card.first { order: 2; padding-top: 28px; transform: scale(1.06); z-index: 2; background: linear-gradient(160deg, var(--gold-tint), var(--card) 60%); border-color: var(--gold); }
   .podium-card.first:hover { transform: scale(1.06) translateY(-3px); }
-  .podium-card.second { order: 1; background: linear-gradient(160deg, #F1F2F4, var(--card) 60%); border-color: var(--silver); }
-  .podium-card.third { order: 3; background: linear-gradient(160deg, #F7E9DC, var(--card) 60%); border-color: var(--bronze); }
+  .podium-card.second { order: 1; background: linear-gradient(160deg, var(--line), var(--card) 60%); border-color: var(--silver); }
+  .podium-card.third { order: 3; background: linear-gradient(160deg, var(--gold-tint), var(--card) 60%); border-color: var(--bronze); }
   .podium-medal { font-size: 30px; margin-bottom: 4px; }
-  .podium-name {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--ink);
-    margin: 4px 0 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .podium-office { font-size: 11px; color: var(--muted); margin: 2px 0 8px; }
-  .podium-count {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--ink);
-  }
+  .podium-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 14px; color: var(--ink); margin: 4px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .podium-office { font-size: 11px; color: var(--muted); margin: 2px 0 6px; }
+  .podium-count { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--ink); }
   .streak-badge { font-size: 11px; color: var(--rose-dark); margin-left: 4px; white-space: nowrap; }
+  .achievements-row { display: flex; justify-content: center; gap: 4px; margin-top: 6px; flex-wrap: wrap; font-size: 15px; }
+  .achievements-row.left { justify-content: flex-start; }
  
   .shingle-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
   .shingle {
-    position: relative;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--rose-tint);
-    border-radius: 14px;
-    padding: 13px 16px 13px 16px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--rose-tint);
+    border-radius: 14px; padding: 13px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    box-shadow: 0 3px 10px rgba(224,137,158,0.07); transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .shingle:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(224,137,158,0.14); }
-  .rank-num {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--muted);
-    width: 20px;
-    flex-shrink: 0;
-  }
+  .rank-num { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 13px; color: var(--muted); width: 20px; flex-shrink: 0; }
   .agent-info { flex: 1; min-width: 140px; }
-  .agent-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink);
-    margin: 0 0 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .agent-office {
-    font-size: 12px;
-    color: var(--muted);
-    margin: 0;
-  }
-  .agent-count {
-    font-family: 'Playfair Display', serif;
-    font-size: 21px;
-    font-weight: 700;
-    color: var(--ink);
-    min-width: 30px;
-    text-align: right;
-  }
-  .badge {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.03em;
-    padding: 4px 10px;
-    border-radius: 20px;
-    flex-shrink: 0;
-  }
+  .agent-name { font-size: 14px; font-weight: 500; color: var(--ink); margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .agent-office { font-size: 12px; color: var(--muted); margin: 0; }
+  .agent-count { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 700; color: var(--ink); min-width: 30px; text-align: right; }
+  .badge { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.03em; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; }
   .badge.gold { background: var(--gold-tint); color: var(--gold-dark); }
   .badge.rust { background: var(--rose-tint); color: var(--rose-dark); }
   .icon-crown { width: 15px; height: 15px; flex-shrink: 0; color: var(--gold-dark); }
@@ -285,278 +195,119 @@
   .row-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .row-actions .btn.secondary { padding: 4px 10px; font-size: 11px; }
  
-  .office-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 16px 18px;
-    margin-bottom: 12px;
-    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
-    transition: transform 0.15s ease;
-  }
+  .office-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(224,137,158,0.07); transition: transform 0.15s ease; }
   .office-card:hover { transform: translateY(-2px); }
   .office-card.leading { border-color: var(--gold); background: linear-gradient(135deg, var(--gold-tint), var(--card) 50%); }
-  .office-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 4px;
-    gap: 8px;
-  }
-  .office-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .office-stat {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--muted);
-  }
-  .office-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-  .office-actions {
-    display: flex;
-    gap: 6px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-  .bar-track {
-    height: 9px;
-    background: var(--rose-tint);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 2px;
-  }
-  .bar-fill {
-    height: 100%;
-    background: var(--rose);
-    border-radius: 20px;
-    transition: width 0.5s ease;
-  }
+  .office-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; gap: 8px; }
+  .office-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .office-stat { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 13px; color: var(--muted); }
+  .office-meta { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .office-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .bar-track { height: 9px; background: var(--rose-tint); border-radius: 20px; overflow: hidden; margin-bottom: 2px; }
+  .bar-fill { height: 100%; background: var(--rose); border-radius: 20px; transition: width 0.5s ease; }
   .office-card.leading .bar-fill { background: var(--gold); }
   .bar-fill.complete { background: var(--gold); }
  
-  .empty-state {
-    text-align: center;
-    padding: 36px 20px;
-    color: var(--muted);
-    font-size: 13px;
-    background: var(--card);
-    border: 1px dashed var(--line-strong);
-    border-radius: 16px;
-  }
+  .empty-state { text-align: center; padding: 36px 20px; color: var(--muted); font-size: 13px; background: var(--card); border: 1px dashed var(--line-strong); border-radius: 16px; }
  
-  .form-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px;
-    margin-top: 6px;
-    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
-  }
+  .form-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-top: 6px; box-shadow: 0 3px 10px rgba(224,137,158,0.07); }
   .form-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
   .form-row input, .form-row select {
-    flex: 1;
-    min-width: 120px;
-    background: var(--bg);
-    border: 1px solid var(--line-strong);
-    color: var(--ink);
-    padding: 9px 12px;
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    flex: 1; min-width: 120px; background: var(--bg); border: 1px solid var(--line-strong); color: var(--ink);
+    padding: 9px 12px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 13px;
   }
   .form-row input::placeholder { color: var(--muted); }
-  .form-row input:focus, .form-row select:focus {
-    outline: none;
-    border-color: var(--rose);
-  }
+  .form-row input:focus, .form-row select:focus { outline: none; border-color: var(--rose); }
   .btn {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    background: var(--rose);
-    color: #FFFFFF;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
+    font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.02em;
+    background: var(--rose); color: #FFFFFF; border: none; padding: 10px 18px; border-radius: 20px;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
   }
   .btn:hover { background: var(--rose-dark); }
   .btn:active { transform: scale(0.97); }
-  .btn.secondary {
-    background: none;
-    border: 1px solid var(--line-strong);
-    color: var(--rose-dark);
-  }
+  .btn.secondary { background: none; border: 1px solid var(--line-strong); color: var(--rose-dark); }
   .btn.secondary:hover { border-color: var(--rose); background: var(--rose-tint); }
-  .status-msg {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 8px;
-    min-height: 16px;
-  }
+  .status-msg { font-size: 12px; color: var(--muted); margin-top: 8px; min-height: 16px; }
   .divider { border: none; border-top: 1px solid var(--line); margin: 28px 0; }
  
-  .prize-banner {
-    background: linear-gradient(135deg, var(--gold-tint), var(--card) 60%);
-    border: 1px solid var(--gold);
-    border-radius: 18px;
-    padding: 22px 24px;
-  }
-  .prize-eyebrow {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gold-dark);
-    margin: 0 0 8px;
-  }
-  .prize-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 700;
-    font-style: italic;
-    color: var(--ink);
-    margin: 0 0 8px;
-  }
-  .prize-desc {
-    font-size: 14px;
-    color: var(--muted);
-    margin: 0;
-    line-height: 1.5;
-  }
+  .prize-banner { background: linear-gradient(135deg, var(--gold-tint), var(--card) 60%); border: 1px solid var(--gold); border-radius: 18px; padding: 22px 24px; }
+  .prize-eyebrow { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-dark); margin: 0 0 8px; }
+  .prize-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; font-style: italic; color: var(--ink); margin: 0 0 8px; }
+  .prize-desc { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.5; }
   .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
   .admin-only { display: none; }
   .admin-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    background: var(--rose-tint);
-    color: var(--rose-dark);
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 14px;
+    display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.05em;
+    text-transform: uppercase; background: var(--rose-tint); color: var(--rose-dark);
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 14px;
   }
   .admin-badge button {
-    font-family: 'Quicksand', sans-serif;
-    font-size: 10px;
-    text-transform: none;
-    letter-spacing: 0;
-    background: none;
-    border: none;
-    color: var(--rose-dark);
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
+    font-family: 'Quicksand', sans-serif; font-size: 10px; text-transform: none; letter-spacing: 0;
+    background: none; border: none; color: var(--rose-dark); text-decoration: underline; cursor: pointer; padding: 0;
   }
   body.show-admin .admin-only { display: revert; }
   body.show-admin .admin-only.admin-badge { display: inline-flex; }
   body.show-admin .tab-btn.admin-only { display: inline-block; }
-  .admin-link {
-    text-align: center;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    color: var(--line-strong);
-    margin-top: 36px;
-    cursor: pointer;
-    user-select: none;
-  }
+  .admin-link { text-align: center; font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: var(--line-strong); margin-top: 36px; cursor: pointer; user-select: none; }
   .admin-link:hover { color: var(--muted); }
   body.show-admin .admin-link { color: var(--rose-dark); }
-  .modal-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.45);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 20px;
-  }
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
   .modal-backdrop.show { display: flex; }
-  .modal-card {
-    width: min(440px, 92vw);
-    max-height: 85vh;
-    overflow-y: auto;
-    background: var(--card);
-    border-radius: 18px;
-    padding: 24px;
-    border: 1px solid var(--line);
-    box-shadow: 0 20px 60px rgba(0,0,0,.20);
-  }
-  .close-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-  }
-  .close-row input[type="date"] {
-    flex: 1;
-    min-width: 140px;
-    background: var(--bg);
-    border: 1px solid var(--line-strong);
-    color: var(--ink);
-    padding: 8px 10px;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-  }
+  .modal-card { width: min(440px, 92vw); max-height: 85vh; overflow-y: auto; background: var(--card); border-radius: 18px; padding: 24px; border: 1px solid var(--line); box-shadow: 0 20px 60px rgba(0,0,0,.20); }
+  .close-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .close-row input[type="date"] { flex: 1; min-width: 140px; background: var(--bg); border: 1px solid var(--line-strong); color: var(--ink); padding: 8px 10px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; }
   .close-row .btn.secondary { padding: 6px 10px; font-size: 11px; }
-  .chart-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 10px rgba(224,137,158,0.07);
-  }
+  .chart-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-bottom: 20px; box-shadow: 0 3px 10px rgba(224,137,158,0.07); }
   .chart-card canvas { max-height: 260px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 20px; }
  
   @media (max-width: 480px) {
     h1 { font-size: 30px; }
+    .welcome-title { font-size: 32px; }
     .exec-grid { grid-template-columns: repeat(2, 1fr); }
     .podium-card { max-width: 110px; padding: 12px 6px; }
     .podium-card.first { padding-top: 20px; }
     .wrap { padding: 20px 14px 50px; }
     .toolbar-row { flex-direction: column; align-items: flex-start; }
     .modal-card { padding: 18px; }
+    body.presentation .exec-grid { grid-template-columns: repeat(2, 1fr); }
+    body.presentation h1 { font-size: 34px; }
   }
 </style>
 </head>
 <body>
 <canvas id="confettiCanvas"></canvas>
 <div class="celebration-toast" id="celebrationToast"></div>
+ 
+<div class="welcome-screen" id="welcomeScreen">
+  <p class="welcome-eyebrow">ProCo Roofing</p>
+  <p class="welcome-title">Top Closer Perks</p>
+  <p class="welcome-quarter" id="welcomeQuarter">Q3 2026</p>
+  <p class="welcome-tag">\u{1F3C6} Live Leaderboard</p>
+  <button class="welcome-enter-btn" id="enterDashboardBtn">Enter Dashboard</button>
+</div>
+ 
+<button class="exit-presentation-btn" id="exitPresentationBtn">Exit presentation</button>
+ 
 <div class="wrap">
-  <p class="eyebrow">ProCo Roofing &middot; Realtor referral program</p>
-  <h1>Top Closer Perks</h1>
-  <p class="sub">Only closed roofs count. Watch the board move.</p>
+  <div class="header-row">
+    <div>
+      <p class="eyebrow">ProCo Roofing &middot; Realtor referral program</p>
+      <h1>Top Closer Perks</h1>
+      <p class="sub">Only closed roofs count. Watch the board move.</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle">\u2600\uFE0F</button>
+  </div>
+ 
   <span class="admin-badge admin-only" id="adminBadge">
     Admin mode on
     <button id="changePasscodeBtn">change passcode</button>
     <button id="exportCsvBtn">export csv</button>
+    <button id="backupBtn">backup json</button>
+    <button id="restoreBtn">restore backup</button>
   </span>
+  <input type="file" id="restoreFileInput" accept="application/json" style="display:none;">
  
   <div class="exec-grid" id="execGrid"></div>
  
@@ -565,6 +316,11 @@
       <label for="quarterSelect">Viewing:</label>
       <select id="quarterSelect"></select>
     </div>
+    <button class="presentation-btn" id="presentationBtn">\u{1F4FA} Presentation mode</button>
+  </div>
+ 
+  <div class="search-row">
+    <input type="text" id="agentSearch" placeholder="\u{1F50D} Search agent...">
   </div>
  
   <div class="tabs">
@@ -608,6 +364,10 @@
  
   <div class="panel" id="panel-charts">
     <div class="chart-card">
+      <p class="section-title" style="font-size:15px;">Advanced stats</p>
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+    <div class="chart-card">
       <p class="section-title" style="font-size:15px;" id="officeChartTitle">Closed roofs by office</p>
       <canvas id="officeChart"></canvas>
     </div>
@@ -638,12 +398,8 @@
   <div id="agentModal" class="modal-backdrop">
     <div class="modal-card">
       <p class="section-title">Edit agent</p>
-      <div class="form-row">
-        <input type="text" id="modalAgentName" placeholder="Agent name">
-      </div>
-      <div class="form-row">
-        <select id="modalOfficeSelect"></select>
-      </div>
+      <div class="form-row"><input type="text" id="modalAgentName" placeholder="Agent name"></div>
+      <div class="form-row"><select id="modalOfficeSelect"></select></div>
       <div style="display:flex;gap:8px;margin-top:12px;">
         <button class="btn" id="saveAgentModalBtn">Save</button>
         <button class="btn secondary" id="cancelAgentModalBtn">Cancel</button>
@@ -675,10 +431,12 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbzcB46iOVo4EVhgZnfzVBG-rMA61UEIqb83ldj1aTK-pw_zo8XfSY6VBSPtdGrPvfL3-Q/exec';
 const DEFAULT_PASSCODE = 'proco2026';
 let isAdmin = false;
+let searchQuery = '';
+let presentationInterval = null;
+const presentationTabOrder = ['individual', 'offices', 'grand', 'charts'];
+let presentationTabPos = 0;
  
-function getPasscode() {
-  return (state && state.adminPasscode) || DEFAULT_PASSCODE;
-}
+function getPasscode() { return (state && state.adminPasscode) || DEFAULT_PASSCODE; }
  
 function tryUnlockAdmin() {
   if (isAdmin) {
@@ -714,25 +472,48 @@ async function changePasscode() {
   alert('Passcode updated.');
 }
  
-function exportCsv() {
-  const rows = [['Office', 'Agent', 'Close Date']];
-  state.offices.forEach(o => {
-    o.agents.forEach(a => {
-      (a.closes || []).forEach(ts => {
-        rows.push([o.name, a.name, new Date(ts).toISOString().slice(0, 10)]);
-      });
-    });
-  });
-  const csv = rows.map(r => r.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+function downloadBlob(content, mime, filename) {
+  const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'top-closer-perks-export-' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
+}
+ 
+function exportCsv() {
+  const rows = [['Office', 'Agent', 'Close Date']];
+  state.offices.forEach(o => o.agents.forEach(a => (a.closes || []).forEach(ts => {
+    rows.push([o.name, a.name, new Date(ts).toISOString().slice(0, 10)]);
+  })));
+  const csv = rows.map(r => r.map(f => `"${String(f).replace(/"/g, '""')}"`).join(',')).join('\n');
+  downloadBlob(csv, 'text/csv;charset=utf-8;', 'top-closer-perks-export-' + new Date().toISOString().slice(0, 10) + '.csv');
+}
+ 
+function backupJson() {
+  downloadBlob(JSON.stringify(state, null, 2), 'application/json', 'top-closer-perks-backup-' + new Date().toISOString().slice(0, 10) + '.json');
+}
+ 
+function restoreJson(file) {
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (!parsed || !Array.isArray(parsed.offices)) throw new Error('Invalid file');
+      const confirmRestore = window.confirm('This will replace ALL current data with the backup file. Continue?');
+      if (!confirmRestore) return;
+      state = parsed;
+      await saveState();
+      renderAll();
+      alert('Backup restored.');
+    } catch (err) {
+      alert('That file does not look like a valid backup.');
+    }
+  };
+  reader.readAsText(file);
 }
  
 const QUARTERS = [
@@ -759,51 +540,44 @@ let agentChartInstance = null;
 let monthChartInstance = null;
  
 function countInRange(closes, start, end) {
-  return closes.filter(ts => {
-    const d = new Date(ts);
-    return d >= start && d <= end;
-  }).length;
+  return closes.filter(ts => { const d = new Date(ts); return d >= start && d <= end; }).length;
 }
- 
-function quarterCount(agent) {
-  const q = QUARTERS[selectedQuarterIndex];
-  return countInRange(agent.closes || [], q.start, q.end);
-}
- 
-function yearCount(agent) {
-  return countInRange(agent.closes || [], YEAR_START, YEAR_END);
-}
+function quarterCount(agent) { const q = QUARTERS[selectedQuarterIndex]; return countInRange(agent.closes || [], q.start, q.end); }
+function yearCount(agent) { return countInRange(agent.closes || [], YEAR_START, YEAR_END); }
  
 function computeStreak(agent) {
   const closes = agent.closes || [];
   if (closes.length === 0) return 0;
-  const monthsWithClose = new Set(closes.map(ts => {
-    const d = new Date(ts);
-    return d.getFullYear() + '-' + d.getMonth();
-  }));
+  const monthsWithClose = new Set(closes.map(ts => { const d = new Date(ts); return d.getFullYear() + '-' + d.getMonth(); }));
   let streak = 0;
   const cursor = new Date();
   while (true) {
     const key = cursor.getFullYear() + '-' + cursor.getMonth();
-    if (monthsWithClose.has(key)) {
-      streak++;
-      cursor.setMonth(cursor.getMonth() - 1);
-    } else {
-      break;
-    }
+    if (monthsWithClose.has(key)) { streak++; cursor.setMonth(cursor.getMonth() - 1); } else break;
   }
   return streak;
 }
- 
 function streakBadge(agent) {
   const streak = computeStreak(agent);
-  if (streak >= 2) return `<span class="streak-badge">\u{1F525} ${streak}-month streak</span>`;
-  return '';
+  return streak >= 2 ? `<span class="streak-badge">\u{1F525} ${streak}-month streak</span>` : '';
 }
  
-function defaultState() {
-  return { offices: [], adminPasscode: DEFAULT_PASSCODE };
+function computeAchievements(agent) {
+  const total = yearCount(agent);
+  const badges = [];
+  if (total >= 1) badges.push('\u{1F949}');
+  if (total >= 5) badges.push('\u{1F948}');
+  if (total >= 10) badges.push('\u{1F947}');
+  if (total >= QUALIFY_THRESHOLD) badges.push('\u{1F48E}');
+  return badges;
 }
+function achievementsRow(agent, alignLeft) {
+  const badges = computeAchievements(agent);
+  if (badges.length === 0) return '';
+  return `<div class="achievements-row${alignLeft ? ' left' : ''}">${badges.join(' ')}</div>`;
+}
+ 
+function defaultState() { return { offices: [], adminPasscode: DEFAULT_PASSCODE }; }
  
 async function loadState() {
   try {
@@ -815,6 +589,7 @@ async function loadState() {
     state = defaultState();
   }
   setupQuarterSelect();
+  document.getElementById('welcomeQuarter').textContent = QUARTERS[CURRENT_QUARTER_INDEX].label;
   renderAll();
 }
  
@@ -852,8 +627,7 @@ function showCelebration(message) {
 function playChime() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const notes = [523.25, 659.25, 783.99];
-    notes.forEach((freq, i) => {
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
@@ -866,9 +640,7 @@ function playChime() {
       osc.start(ctx.currentTime + i * 0.11);
       osc.stop(ctx.currentTime + i * 0.11 + 0.32);
     });
-  } catch (err) {
-    console.error('Audio error', err);
-  }
+  } catch (err) { console.error('Audio error', err); }
 }
  
 function fireConfetti(big) {
@@ -881,15 +653,11 @@ function fireConfetti(big) {
   const particles = [];
   for (let i = 0; i < count; i++) {
     particles.push({
-      x: Math.random() * canvas.width,
-      y: -20 - Math.random() * canvas.height * 0.3,
-      w: 6 + Math.random() * 6,
-      h: 6 + Math.random() * 10,
+      x: Math.random() * canvas.width, y: -20 - Math.random() * canvas.height * 0.3,
+      w: 6 + Math.random() * 6, h: 6 + Math.random() * 10,
       color: colors[Math.floor(Math.random() * colors.length)],
-      speedY: 2 + Math.random() * 3,
-      speedX: -2 + Math.random() * 4,
-      rotation: Math.random() * 360,
-      rotationSpeed: -8 + Math.random() * 16
+      speedY: 2 + Math.random() * 3, speedX: -2 + Math.random() * 4,
+      rotation: Math.random() * 360, rotationSpeed: -8 + Math.random() * 16
     });
   }
   let frame = 0;
@@ -897,9 +665,7 @@ function fireConfetti(big) {
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => {
-      p.x += p.speedX;
-      p.y += p.speedY;
-      p.rotation += p.rotationSpeed;
+      p.x += p.speedX; p.y += p.speedY; p.rotation += p.rotationSpeed;
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate((p.rotation * Math.PI) / 180);
@@ -908,11 +674,8 @@ function fireConfetti(big) {
       ctx.restore();
     });
     frame++;
-    if (frame < maxFrames) {
-      requestAnimationFrame(animate);
-    } else {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    if (frame < maxFrames) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
   animate();
 }
@@ -929,9 +692,7 @@ function renderExecGrid() {
   const totalOffices = state.offices.length;
   const totalAgents = allAgents.length;
  
-  let leadingOffice = null;
-  let leadingPct = -1;
-  let avgPct = 0;
+  let leadingOffice = null, leadingPct = -1, avgPct = 0;
   state.offices.forEach(o => {
     const total = o.agents.reduce((s, a) => s + quarterCount(a), 0);
     const goal = Math.max(1, o.agentCount);
@@ -941,46 +702,19 @@ function renderExecGrid() {
   });
   avgPct = totalOffices > 0 ? Math.round((avgPct / totalOffices) * 100) : 0;
  
-  let leadingAgent = null;
-  let leadingAgentCount = -1;
-  allAgents.forEach(a => {
-    const c = quarterCount(a);
-    if (c > leadingAgentCount) { leadingAgentCount = c; leadingAgent = a; }
-  });
+  let leadingAgent = null, leadingAgentCount = -1;
+  allAgents.forEach(a => { const c = quarterCount(a); if (c > leadingAgentCount) { leadingAgentCount = c; leadingAgent = a; } });
  
   const qLabel = QUARTERS[selectedQuarterIndex].label;
-  const grid = document.getElementById('execGrid');
-  grid.innerHTML = `
-    <div class="cd-card">
-      <p class="cd-label">${currentQ.label} ends in</p>
-      <p class="cd-value rust">${daysLeft}d</p>
-    </div>
-    <div class="cd-card">
-      <p class="cd-label">Closed in ${qLabel}</p>
-      <p class="cd-value">${quarterTotal}</p>
-    </div>
-    <div class="cd-card">
-      <p class="cd-label">Closed this year</p>
-      <p class="cd-value">${yearTotal}</p>
-    </div>
-    <div class="cd-card">
-      <p class="cd-label">Offices &middot; agents</p>
-      <p class="cd-value" style="font-size:18px;">${totalOffices} &middot; ${totalAgents}</p>
-    </div>
-    <div class="cd-card">
-      <p class="cd-label">${qLabel} goal avg</p>
-      <p class="cd-value gold">${avgPct}%</p>
-    </div>
-    <div class="cd-card">
-      <p class="cd-label">Leading office</p>
-      <p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingOffice ? escapeHtml(leadingOffice.name) : '\u2014'}</p>
-    </div>
-    <div class="cd-card">
-      <p class="cd-label">Leading agent</p>
-      <p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingAgent && leadingAgentCount > 0 ? escapeHtml(leadingAgent.name) : '\u2014'}</p>
-    </div>
+  document.getElementById('execGrid').innerHTML = `
+    <div class="cd-card"><p class="cd-label">${currentQ.label} ends in</p><p class="cd-value rust">${daysLeft}d</p></div>
+    <div class="cd-card"><p class="cd-label">Closed in ${qLabel}</p><p class="cd-value">${quarterTotal}</p></div>
+    <div class="cd-card"><p class="cd-label">Closed this year</p><p class="cd-value">${yearTotal}</p></div>
+    <div class="cd-card"><p class="cd-label">Offices &middot; agents</p><p class="cd-value" style="font-size:18px;">${totalOffices} &middot; ${totalAgents}</p></div>
+    <div class="cd-card"><p class="cd-label">${qLabel} goal avg</p><p class="cd-value gold">${avgPct}%</p></div>
+    <div class="cd-card"><p class="cd-label">Leading office</p><p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingOffice ? escapeHtml(leadingOffice.name) : '\u2014'}</p></div>
+    <div class="cd-card"><p class="cd-label">Leading agent</p><p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingAgent && leadingAgentCount > 0 ? escapeHtml(leadingAgent.name) : '\u2014'}</p></div>
   `;
- 
   document.getElementById('individualTitle').textContent = 'Top closers \u2014 ' + qLabel;
   document.getElementById('officesTitle').textContent = 'Office race \u2014 ' + qLabel;
   document.getElementById('officeChartTitle').textContent = 'Closed roofs by office (' + qLabel + ')';
@@ -1012,12 +746,15 @@ function renderPodium(top3) {
   order.forEach(idx => {
     const agent = top3[idx];
     if (!agent) return;
+    const crownLabel = idx === 0 ? '<p class="podium-office" style="margin-top:2px;">\u{1F451} Top Closer of the Quarter</p>' : '';
     html += `
       <div class="podium-card ${classes[idx]}">
         <div class="podium-medal">${medals[idx]}</div>
         <p class="podium-name">${escapeHtml(agent.name)}</p>
         <p class="podium-office">${escapeHtml(agent.office)}${streakBadge(agent)}</p>
         <p class="podium-count">${agent.referrals}</p>
+        ${crownLabel}
+        ${achievementsRow(agent)}
         ${agentActionButtons(agent, agent.office)}
       </div>
     `;
@@ -1028,16 +765,48 @@ function renderPodium(top3) {
  
 function renderIndividual() {
   const container = document.getElementById('individualList');
-  const allAgents = [];
+  const podiumEl = document.getElementById('podiumRow');
+  let allAgents = [];
   state.offices.forEach(o => {
     o.agents.forEach(a => {
       const count = quarterCount(a);
-      if (count > 0) allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
+      allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
     });
   });
  
+  if (searchQuery.trim()) {
+    const q = searchQuery.trim().toLowerCase();
+    const matches = allAgents.filter(a => a.name.toLowerCase().includes(q)).sort((a, b) => b.referrals - a.referrals);
+    podiumEl.innerHTML = '';
+    if (matches.length === 0) {
+      container.innerHTML = '<div class="empty-state">No agents match your search.</div>';
+      return;
+    }
+    let html = '<div class="shingle-list">';
+    matches.forEach(agent => {
+      const unlocked = agent.referrals >= BONUS_THRESHOLD;
+      html += `
+        <div class="shingle">
+          <div class="agent-info">
+            <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
+            <p class="agent-office">${escapeHtml(agent.office)}</p>
+            ${achievementsRow(agent, true)}
+            ${agentActionButtons(agent, agent.office)}
+          </div>
+          ${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
+          <span class="agent-count">${agent.referrals}</span>
+        </div>
+      `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    wireAgentButtons();
+    return;
+  }
+ 
+  allAgents = allAgents.filter(a => a.referrals > 0);
   if (allAgents.length === 0) {
-    document.getElementById('podiumRow').innerHTML = '';
+    podiumEl.innerHTML = '';
     container.innerHTML = `<div class="empty-state">No closed roofs logged for ${QUARTERS[selectedQuarterIndex].label}.</div>`;
     return;
   }
@@ -1057,6 +826,7 @@ function renderIndividual() {
         <div class="agent-info">
           <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
           <p class="agent-office">${escapeHtml(agent.office)}</p>
+          ${achievementsRow(agent, true)}
           ${agentActionButtons(agent, agent.office)}
         </div>
         ${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
@@ -1066,48 +836,35 @@ function renderIndividual() {
   });
   if (rest.length > 0) html += '</div>';
   container.innerHTML = html;
- 
   wireAgentButtons();
 }
  
 function wireAgentButtons() {
   document.querySelectorAll('.edit-agent-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const officeName = btn.dataset.office;
-      const agentName = btn.dataset.agent;
-      const office = state.offices.find(o => o.name === officeName);
+      const office = state.offices.find(o => o.name === btn.dataset.office);
       if (!office) return;
-      const agent = office.agents.find(a => a.name === agentName);
+      const agent = office.agents.find(a => a.name === btn.dataset.agent);
       if (!agent) return;
- 
       activeAgentEdit = { oldOfficeId: office.id, agentName: agent.name };
       document.getElementById('modalAgentName').value = agent.name;
       const officeSelect = document.getElementById('modalOfficeSelect');
-      officeSelect.innerHTML = state.offices
-        .map(o => `<option value="${o.id}" ${o.id === office.id ? 'selected' : ''}>${escapeHtml(o.name)}</option>`)
-        .join('');
+      officeSelect.innerHTML = state.offices.map(o => `<option value="${o.id}" ${o.id === office.id ? 'selected' : ''}>${escapeHtml(o.name)}</option>`).join('');
       document.getElementById('agentModal').classList.add('show');
     });
   });
- 
   document.querySelectorAll('.delete-agent-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const officeName = btn.dataset.office;
-      const agentName = btn.dataset.agent;
-      const office = state.offices.find(o => o.name === officeName);
+      const office = state.offices.find(o => o.name === btn.dataset.office);
       if (!office) return;
-      const confirmDelete = window.confirm(`Delete ${agentName}? This will also remove all of this agent's closes.`);
-      if (!confirmDelete) return;
-      office.agents = office.agents.filter(a => a.name !== agentName);
+      if (!window.confirm(`Delete ${btn.dataset.agent}? This will also remove all of this agent's closes.`)) return;
+      office.agents = office.agents.filter(a => a.name !== btn.dataset.agent);
       await saveState();
       renderAll();
     });
   });
- 
   document.querySelectorAll('.history-agent-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      openClosesModal(btn.dataset.office, btn.dataset.agent);
-    });
+    btn.addEventListener('click', () => openClosesModal(btn.dataset.office, btn.dataset.agent));
   });
 }
  
@@ -1117,7 +874,6 @@ function openClosesModal(officeName, agentName) {
   const agent = office.agents.find(a => a.name === agentName);
   if (!agent) return;
   if (!agent.closes) agent.closes = [];
- 
   activeClosesEdit = { officeId: office.id, agentName: agent.name };
   document.getElementById('closesModalTitle').textContent = 'Close history \u2014 ' + agent.name;
   document.getElementById('newCloseDate').value = '';
@@ -1137,19 +893,11 @@ function renderClosesList() {
     listEl.innerHTML = '<p class="status-msg">No closes logged for this agent yet.</p>';
     return;
   }
- 
   const sortedIdx = agent.closes.map((ts, idx) => idx).sort((a, b) => new Date(agent.closes[b]) - new Date(agent.closes[a]));
- 
   let html = '';
   sortedIdx.forEach(idx => {
-    const ts = agent.closes[idx];
-    const dateOnly = new Date(ts).toISOString().slice(0, 10);
-    html += `
-      <div class="close-row">
-        <input type="date" value="${dateOnly}" data-idx="${idx}" class="edit-close-date">
-        <button class="btn secondary delete-close-btn" data-idx="${idx}">Delete</button>
-      </div>
-    `;
+    const dateOnly = new Date(agent.closes[idx]).toISOString().slice(0, 10);
+    html += `<div class="close-row"><input type="date" value="${dateOnly}" data-idx="${idx}" class="edit-close-date"><button class="btn secondary delete-close-btn" data-idx="${idx}">Delete</button></div>`;
   });
   listEl.innerHTML = html;
  
@@ -1163,12 +911,10 @@ function renderClosesList() {
       renderAll();
     });
   });
- 
   listEl.querySelectorAll('.delete-close-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const idx = parseInt(btn.dataset.idx, 10);
-      const confirmDelete = window.confirm('Delete this close? This cannot be undone.');
-      if (!confirmDelete) return;
+      if (!window.confirm('Delete this close? This cannot be undone.')) return;
       agent.closes.splice(idx, 1);
       await saveState();
       renderClosesList();
@@ -1188,7 +934,6 @@ function renderOffices() {
     const goal = Math.max(1, o.agentCount);
     return { ...o, total, goal, pct: Math.min(100, Math.round((total / goal) * 100)) };
   });
- 
   const maxTotal = Math.max(...officesWithTotals.map(o => o.total));
   const leaderId = maxTotal > 0 ? officesWithTotals.find(o => o.total === maxTotal).id : null;
  
@@ -1209,8 +954,7 @@ function renderOffices() {
           <button class="btn secondary add-agent-btn" data-office-id="${o.id}">+ Agent</button>
           <button class="btn secondary edit-office-btn" data-office-id="${o.id}">Edit</button>
           <button class="btn secondary delete-office-btn" data-office-id="${o.id}">Delete</button>
-        </div>
-        ` : ''}
+        </div>` : ''}
       </div>
     `;
   });
@@ -1222,14 +966,12 @@ function renderOffices() {
       if (!office) return;
       const name = window.prompt('New agent name:');
       if (!name || !name.trim()) return;
-      const exists = office.agents.some(a => a.name.toLowerCase() === name.trim().toLowerCase());
-      if (exists) { alert('That agent already exists in this office.'); return; }
+      if (office.agents.some(a => a.name.toLowerCase() === name.trim().toLowerCase())) { alert('That agent already exists in this office.'); return; }
       office.agents.push({ name: name.trim(), closes: [] });
       await saveState();
       renderAll();
     });
   });
- 
   document.querySelectorAll('.edit-office-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const office = state.offices.find(o => o.id === btn.dataset.officeId);
@@ -1239,23 +981,18 @@ function renderOffices() {
       const newAgentCount = window.prompt('Edit number of agents:', office.agentCount);
       if (newAgentCount === null) return;
       const parsedAgentCount = parseInt(newAgentCount, 10);
-      if (!newName.trim() || !parsedAgentCount || parsedAgentCount < 1) {
-        alert('Enter a valid office name and number of agents.');
-        return;
-      }
+      if (!newName.trim() || !parsedAgentCount || parsedAgentCount < 1) { alert('Enter a valid office name and number of agents.'); return; }
       office.name = newName.trim();
       office.agentCount = parsedAgentCount;
       await saveState();
       renderAll();
     });
   });
- 
   document.querySelectorAll('.delete-office-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const office = state.offices.find(o => o.id === btn.dataset.officeId);
       if (!office) return;
-      const confirmDelete = window.confirm(`Delete ${office.name}? This will also delete all agents and closes in this office.`);
-      if (!confirmDelete) return;
+      if (!window.confirm(`Delete ${office.name}? This will also delete all agents and closes in this office.`)) return;
       state.offices = state.offices.filter(o => o.id !== btn.dataset.officeId);
       await saveState();
       renderAll();
@@ -1264,49 +1001,38 @@ function renderOffices() {
 }
  
 function renderGrand() {
-  const yearEl = document.getElementById('grandYear');
-  if (yearEl) yearEl.textContent = YEAR;
- 
+  document.getElementById('grandYear').textContent = YEAR;
   const container = document.getElementById('grandList');
   const allAgents = [];
-  state.offices.forEach(o => {
-    o.agents.forEach(a => {
-      const count = yearCount(a);
-      if (count > 0) allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
-    });
-  });
+  state.offices.forEach(o => o.agents.forEach(a => {
+    const count = yearCount(a);
+    if (count > 0) allAgents.push({ name: a.name, referrals: count, office: o.name, closes: a.closes });
+  }));
  
   if (allAgents.length === 0) {
     container.innerHTML = '<div class="empty-state">No closed roofs logged yet this year. The race for the trip starts with the first close.</div>';
     return;
   }
- 
   allAgents.sort((a, b) => b.referrals - a.referrals);
   const qualifiedLeaderIndex = allAgents.findIndex(a => a.referrals >= QUALIFY_THRESHOLD);
  
   let html = '<div class="shingle-list">';
   allAgents.forEach((agent, i) => {
-    const rank = i + 1;
     const qualified = agent.referrals >= QUALIFY_THRESHOLD;
     const phoneUnlocked = agent.referrals >= PHONE_THRESHOLD;
     const isLeader = i === qualifiedLeaderIndex;
     let badgeHtml;
-    if (qualified) {
-      badgeHtml = '<span class="badge gold">Trip qualified</span>';
-    } else if (phoneUnlocked) {
-      const toTrip = QUALIFY_THRESHOLD - agent.referrals;
-      badgeHtml = `<span class="badge gold">Phone unlocked</span><span class="badge rust">${toTrip} to trip</span>`;
-    } else {
-      const toPhone = PHONE_THRESHOLD - agent.referrals;
-      badgeHtml = `<span class="badge rust">${toPhone} to phone</span>`;
-    }
+    if (qualified) badgeHtml = '<span class="badge gold">Trip qualified</span>';
+    else if (phoneUnlocked) badgeHtml = `<span class="badge gold">Phone unlocked</span><span class="badge rust">${QUALIFY_THRESHOLD - agent.referrals} to trip</span>`;
+    else badgeHtml = `<span class="badge rust">${PHONE_THRESHOLD - agent.referrals} to phone</span>`;
     html += `
       <div class="shingle">
-        <span class="rank-num">${rank}</span>
+        <span class="rank-num">${i + 1}</span>
         ${isLeader ? crownIcon() : ''}
         <div class="agent-info">
           <p class="agent-name">${escapeHtml(agent.name)}${streakBadge(agent)}</p>
           <p class="agent-office">${escapeHtml(agent.office)}</p>
+          ${achievementsRow(agent, true)}
         </div>
         ${badgeHtml}
         <span class="agent-count">${agent.referrals}</span>
@@ -1315,54 +1041,84 @@ function renderGrand() {
   });
   html += '</div>';
   container.innerHTML = html;
- 
   if (qualifiedLeaderIndex === -1) {
     container.innerHTML += `<div class="empty-state" style="margin-top:12px;">No one has hit ${QUALIFY_THRESHOLD} closed roofs yet. The trip stays unclaimed until someone qualifies.</div>`;
   }
 }
  
+function renderAdvancedStats() {
+  const grid = document.getElementById('statsGrid');
+  const allAgents = [];
+  state.offices.forEach(o => o.agents.forEach(a => allAgents.push(a)));
+  const quarterTotal = allAgents.reduce((s, a) => s + quarterCount(a), 0);
+  const avgPerOffice = state.offices.length > 0 ? (quarterTotal / state.offices.length).toFixed(1) : '0';
+  const avgPerAgent = allAgents.length > 0 ? (quarterTotal / allAgents.length).toFixed(1) : '0';
+ 
+  let fastestGrowing = '\u2014';
+  const prevIdx = selectedQuarterIndex - 1;
+  if (prevIdx >= 0) {
+    const prevQ = QUARTERS[prevIdx];
+    let bestDelta = -Infinity, bestName = null;
+    state.offices.forEach(o => {
+      const currentTotal = o.agents.reduce((s, a) => s + countInRange(a.closes || [], QUARTERS[selectedQuarterIndex].start, QUARTERS[selectedQuarterIndex].end), 0);
+      const prevTotal = o.agents.reduce((s, a) => s + countInRange(a.closes || [], prevQ.start, prevQ.end), 0);
+      const delta = currentTotal - prevTotal;
+      if (delta > bestDelta) { bestDelta = delta; bestName = o.name; }
+    });
+    if (bestName && bestDelta > 0) fastestGrowing = bestName + ' (+' + bestDelta + ')';
+  }
+ 
+  const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthTotals = new Array(12).fill(0);
+  state.offices.forEach(o => o.agents.forEach(a => (a.closes || []).forEach(ts => {
+    const d = new Date(ts);
+    if (d.getFullYear() === YEAR) monthTotals[d.getMonth()]++;
+  })));
+  let mostActiveMonth = '\u2014';
+  const maxMonth = Math.max(...monthTotals);
+  if (maxMonth > 0) mostActiveMonth = monthLabels[monthTotals.indexOf(maxMonth)] + ' (' + maxMonth + ')';
+ 
+  grid.innerHTML = `
+    <div class="cd-card"><p class="cd-label">Avg roofs / office</p><p class="cd-value">${avgPerOffice}</p></div>
+    <div class="cd-card"><p class="cd-label">Avg roofs / agent</p><p class="cd-value">${avgPerAgent}</p></div>
+    <div class="cd-card"><p class="cd-label">Fastest growing office</p><p class="cd-value gold" style="font-size:15px;">${escapeHtml(fastestGrowing)}</p></div>
+    <div class="cd-card"><p class="cd-label">Most active month</p><p class="cd-value gold" style="font-size:15px;">${escapeHtml(mostActiveMonth)}</p></div>
+  `;
+}
+ 
 function renderCharts() {
+  renderAdvancedStats();
   if (typeof Chart === 'undefined') return;
   document.getElementById('chartYear').textContent = YEAR;
  
   const officeLabels = state.offices.map(o => o.name);
   const officeData = state.offices.map(o => o.agents.reduce((s, a) => s + quarterCount(a), 0));
- 
   const allAgents = [];
   state.offices.forEach(o => o.agents.forEach(a => allAgents.push({ name: a.name, count: quarterCount(a) })));
   const topAgents = allAgents.filter(a => a.count > 0).sort((a, b) => b.count - a.count).slice(0, 10);
  
   const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monthTotals = new Array(12).fill(0);
-  state.offices.forEach(o => o.agents.forEach(a => {
-    (a.closes || []).forEach(ts => {
-      const d = new Date(ts);
-      if (d.getFullYear() === YEAR) monthTotals[d.getMonth()]++;
-    });
-  }));
+  state.offices.forEach(o => o.agents.forEach(a => (a.closes || []).forEach(ts => {
+    const d = new Date(ts);
+    if (d.getFullYear() === YEAR) monthTotals[d.getMonth()]++;
+  })));
  
-  const roseColor = '#E0899E';
-  const goldColor = '#D6A756';
-  const inkColor = '#4A2F38';
+  const roseColor = '#E0899E', goldColor = '#D6A756', inkColor = '#4A2F38';
  
   if (officeChartInstance) officeChartInstance.destroy();
   officeChartInstance = new Chart(document.getElementById('officeChart'), {
-    type: 'bar',
-    data: { labels: officeLabels, datasets: [{ label: 'Closed roofs', data: officeData, backgroundColor: roseColor, borderRadius: 6 }] },
+    type: 'bar', data: { labels: officeLabels, datasets: [{ label: 'Closed roofs', data: officeData, backgroundColor: roseColor, borderRadius: 6 }] },
     options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
   });
- 
   if (agentChartInstance) agentChartInstance.destroy();
   agentChartInstance = new Chart(document.getElementById('agentChart'), {
-    type: 'bar',
-    data: { labels: topAgents.map(a => a.name), datasets: [{ label: 'Closed roofs', data: topAgents.map(a => a.count), backgroundColor: goldColor, borderRadius: 6 }] },
+    type: 'bar', data: { labels: topAgents.map(a => a.name), datasets: [{ label: 'Closed roofs', data: topAgents.map(a => a.count), backgroundColor: goldColor, borderRadius: 6 }] },
     options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
   });
- 
   if (monthChartInstance) monthChartInstance.destroy();
   monthChartInstance = new Chart(document.getElementById('monthChart'), {
-    type: 'bar',
-    data: { labels: monthLabels, datasets: [{ label: 'Closed roofs', data: monthTotals, backgroundColor: inkColor, borderRadius: 6 }] },
+    type: 'bar', data: { labels: monthLabels, datasets: [{ label: 'Closed roofs', data: monthTotals, backgroundColor: inkColor, borderRadius: 6 }] },
     options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
   });
 }
@@ -1370,8 +1126,7 @@ function renderCharts() {
 function renderLogSelect() {
   const select = document.getElementById('logOfficeSelect');
   const current = select.value;
-  select.innerHTML = '<option value="">Select office</option>' +
-    state.offices.map(o => `<option value="${o.id}">${escapeHtml(o.name)}</option>`).join('');
+  select.innerHTML = '<option value="">Select office</option>' + state.offices.map(o => `<option value="${o.id}">${escapeHtml(o.name)}</option>`).join('');
   if (current) select.value = current;
 }
  
@@ -1399,23 +1154,61 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
  
+document.getElementById('enterDashboardBtn').addEventListener('click', () => {
+  document.getElementById('welcomeScreen').classList.add('hide');
+});
+ 
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const isDark = document.body.classList.toggle('dark');
+  document.getElementById('themeToggle').textContent = isDark ? '\u{1F319}' : '\u2600\uFE0F';
+  try { localStorage.setItem('tcp-theme', isDark ? 'dark' : 'light'); } catch (e) {}
+});
+try {
+  if (localStorage.getItem('tcp-theme') === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('themeToggle').textContent = '\u{1F319}';
+  }
+} catch (e) {}
+ 
+document.getElementById('agentSearch').addEventListener('input', (e) => {
+  searchQuery = e.target.value;
+  renderIndividual();
+});
+ 
+function stopPresentation() {
+  document.body.classList.remove('presentation');
+  if (presentationInterval) { clearInterval(presentationInterval); presentationInterval = null; }
+}
+document.getElementById('presentationBtn').addEventListener('click', () => {
+  document.body.classList.add('presentation');
+  presentationTabPos = 0;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="individual"]').classList.add('active');
+  document.getElementById('panel-individual').classList.add('active');
+  presentationInterval = setInterval(() => {
+    presentationTabPos = (presentationTabPos + 1) % presentationTabOrder.length;
+    const tab = presentationTabOrder[presentationTabPos];
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const btn = document.querySelector(`[data-tab="${tab}"]`);
+    if (btn) btn.classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+  }, 8000);
+});
+document.getElementById('exitPresentationBtn').addEventListener('click', stopPresentation);
+ 
 document.getElementById('addOfficeBtn').addEventListener('click', async () => {
   const nameInput = document.getElementById('newOfficeName');
   const agentsInput = document.getElementById('newOfficeAgents');
   const statusEl = document.getElementById('officeFormStatus');
   const name = nameInput.value.trim();
   const agentCount = parseInt(agentsInput.value, 10);
- 
-  if (!name || !agentCount || agentCount < 1) {
-    statusEl.textContent = 'Enter an office name and a number of agents.';
-    return;
-  }
- 
+  if (!name || !agentCount || agentCount < 1) { statusEl.textContent = 'Enter an office name and a number of agents.'; return; }
   state.offices.push({ id: 'office-' + Date.now(), name: name, agentCount: agentCount, agents: [] });
   statusEl.textContent = 'Saving...';
   await saveState();
-  nameInput.value = '';
-  agentsInput.value = '';
+  nameInput.value = ''; agentsInput.value = '';
   statusEl.textContent = 'Office added.';
   renderAll();
   setTimeout(() => { statusEl.textContent = ''; }, 2500);
@@ -1427,18 +1220,13 @@ document.getElementById('logReferralBtn').addEventListener('click', async () => 
   const statusEl = document.getElementById('logFormStatus');
   const officeId = officeSelect.value;
   const agentName = agentInput.value.trim();
- 
   if (!officeId) { statusEl.textContent = 'Select an office first.'; return; }
   if (!agentName) { statusEl.textContent = 'Enter the agent name.'; return; }
- 
   const office = state.offices.find(o => o.id === officeId);
   if (!office) { statusEl.textContent = 'Office not found. Try refreshing.'; return; }
  
   let agent = office.agents.find(a => a.name.toLowerCase() === agentName.toLowerCase());
-  if (!agent) {
-    agent = { name: agentName, closes: [] };
-    office.agents.push(agent);
-  }
+  if (!agent) { agent = { name: agentName, closes: [] }; office.agents.push(agent); }
   if (!agent.closes) agent.closes = [];
  
   const prevQuarter = quarterCount(agent);
@@ -1457,9 +1245,7 @@ document.getElementById('logReferralBtn').addEventListener('click', async () => 
   const crossedBonus = prevQuarter < BONUS_THRESHOLD && newQuarter >= BONUS_THRESHOLD;
   const crossedPhone = prevYear < PHONE_THRESHOLD && newYear >= PHONE_THRESHOLD;
   const crossedTrip = prevYear < QUALIFY_THRESHOLD && newYear >= QUALIFY_THRESHOLD;
-  const big = crossedBonus || crossedPhone || crossedTrip;
- 
-  fireConfetti(big);
+  fireConfetti(crossedBonus || crossedPhone || crossedTrip);
   playChime();
   showCelebration('\u{1F389} Congratulations! ' + agentName + ' just closed another roof!');
 });
@@ -1467,32 +1253,31 @@ document.getElementById('logReferralBtn').addEventListener('click', async () => 
 document.getElementById('adminToggle').addEventListener('click', tryUnlockAdmin);
 document.getElementById('changePasscodeBtn').addEventListener('click', (e) => { e.stopPropagation(); changePasscode(); });
 document.getElementById('exportCsvBtn').addEventListener('click', (e) => { e.stopPropagation(); exportCsv(); });
+document.getElementById('backupBtn').addEventListener('click', (e) => { e.stopPropagation(); backupJson(); });
+document.getElementById('restoreBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('restoreFileInput').click(); });
+document.getElementById('restoreFileInput').addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) restoreJson(e.target.files[0]);
+  e.target.value = '';
+});
  
 document.getElementById('cancelAgentModalBtn').addEventListener('click', () => {
   document.getElementById('agentModal').classList.remove('show');
   activeAgentEdit = null;
 });
- 
 document.getElementById('saveAgentModalBtn').addEventListener('click', async () => {
   if (!activeAgentEdit) return;
   const newName = document.getElementById('modalAgentName').value.trim();
   const newOfficeId = document.getElementById('modalOfficeSelect').value;
   if (!newName) { alert('Agent name is required.'); return; }
- 
   const oldOffice = state.offices.find(o => o.id === activeAgentEdit.oldOfficeId);
   if (!oldOffice) return;
   const agent = oldOffice.agents.find(a => a.name === activeAgentEdit.agentName);
   if (!agent) return;
- 
   agent.name = newName;
   if (newOfficeId !== oldOffice.id) {
     const newOffice = state.offices.find(o => o.id === newOfficeId);
-    if (newOffice) {
-      oldOffice.agents = oldOffice.agents.filter(a => a !== agent);
-      newOffice.agents.push(agent);
-    }
+    if (newOffice) { oldOffice.agents = oldOffice.agents.filter(a => a !== agent); newOffice.agents.push(agent); }
   }
- 
   await saveState();
   document.getElementById('agentModal').classList.remove('show');
   activeAgentEdit = null;
@@ -1503,18 +1288,15 @@ document.getElementById('closeClosesModalBtn').addEventListener('click', () => {
   document.getElementById('closesModal').classList.remove('show');
   activeClosesEdit = null;
 });
- 
 document.getElementById('addManualCloseBtn').addEventListener('click', async () => {
   if (!activeClosesEdit) return;
   const dateInput = document.getElementById('newCloseDate');
   if (!dateInput.value) { alert('Pick a date first.'); return; }
- 
   const office = state.offices.find(o => o.id === activeClosesEdit.officeId);
   if (!office) return;
   const agent = office.agents.find(a => a.name === activeClosesEdit.agentName);
   if (!agent) return;
   if (!agent.closes) agent.closes = [];
- 
   agent.closes.push(new Date(dateInput.value + 'T12:00:00').toISOString());
   await saveState();
   dateInput.value = '';
