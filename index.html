@@ -55,11 +55,32 @@
   }
   .sub { font-size: 14px; color: var(--muted); margin: 0 0 20px; }
  
+  .celebration-toast {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--gold-tint), var(--card) 70%);
+    border: 1px solid var(--gold);
+    border-radius: 16px;
+    padding: 14px 22px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    z-index: 4000;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    max-width: 90vw;
+    text-align: center;
+    transition: top 0.4s ease;
+  }
+  .celebration-toast.show { top: 20px; }
+ 
   .exec-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 10px;
-    margin-bottom: 28px;
+    margin-bottom: 16px;
   }
   .cd-card {
     background: var(--card);
@@ -88,6 +109,32 @@
   .cd-value.rust { color: var(--rose-dark); }
   .cd-value.gold { color: var(--gold-dark); }
  
+  .toolbar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .quarter-select-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .quarter-select-row select {
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+  }
+ 
   .tabs {
     display: flex;
     gap: 4px;
@@ -115,7 +162,8 @@
   .tab-btn:hover { color: var(--rose-dark); }
  
   .panel { display: none; }
-  .panel.active { display: block; }
+  .panel.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
  
   .section-title {
     font-family: 'Playfair Display', serif;
@@ -143,12 +191,15 @@
     padding: 16px 10px;
     box-shadow: 0 4px 14px rgba(224,137,158,0.1);
     animation: podiumIn 0.5s ease-out;
+    transition: transform 0.2s ease;
   }
+  .podium-card:hover { transform: translateY(-3px); }
   @keyframes podiumIn {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
   .podium-card.first { order: 2; padding-top: 28px; transform: scale(1.06); z-index: 2; background: linear-gradient(160deg, var(--gold-tint), var(--card) 60%); border-color: var(--gold); }
+  .podium-card.first:hover { transform: scale(1.06) translateY(-3px); }
   .podium-card.second { order: 1; background: linear-gradient(160deg, #F1F2F4, var(--card) 60%); border-color: var(--silver); }
   .podium-card.third { order: 3; background: linear-gradient(160deg, #F7E9DC, var(--card) 60%); border-color: var(--bronze); }
   .podium-medal { font-size: 30px; margin-bottom: 4px; }
@@ -184,7 +235,9 @@
     gap: 14px;
     flex-wrap: wrap;
     box-shadow: 0 3px 10px rgba(224,137,158,0.07);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
+  .shingle:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(224,137,158,0.14); }
   .rank-num {
     font-family: 'Quicksand', sans-serif;
     font-weight: 600;
@@ -239,7 +292,9 @@
     padding: 16px 18px;
     margin-bottom: 12px;
     box-shadow: 0 3px 10px rgba(224,137,158,0.07);
+    transition: transform 0.15s ease;
   }
+  .office-card:hover { transform: translateY(-2px); }
   .office-card.leading { border-color: var(--gold); background: linear-gradient(135deg, var(--gold-tint), var(--card) 50%); }
   .office-head {
     display: flex;
@@ -285,7 +340,7 @@
     height: 100%;
     background: var(--rose);
     border-radius: 20px;
-    transition: width 0.3s;
+    transition: width 0.5s ease;
   }
   .office-card.leading .bar-fill { background: var(--gold); }
   .bar-fill.complete { background: var(--gold); }
@@ -336,9 +391,10 @@
     padding: 10px 18px;
     border-radius: 20px;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.15s, transform 0.1s;
   }
   .btn:hover { background: var(--rose-dark); }
+  .btn:active { transform: scale(0.97); }
   .btn.secondary {
     background: none;
     border: 1px solid var(--line-strong);
@@ -388,6 +444,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
     font-family: 'Quicksand', sans-serif;
     font-weight: 600;
     font-size: 11px;
@@ -453,9 +510,11 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
+    flex-wrap: wrap;
   }
   .close-row input[type="date"] {
     flex: 1;
+    min-width: 140px;
     background: var(--bg);
     border: 1px solid var(--line-strong);
     color: var(--ink);
@@ -481,18 +540,32 @@
     .podium-card { max-width: 110px; padding: 12px 6px; }
     .podium-card.first { padding-top: 20px; }
     .wrap { padding: 20px 14px 50px; }
+    .toolbar-row { flex-direction: column; align-items: flex-start; }
+    .modal-card { padding: 18px; }
   }
 </style>
 </head>
 <body>
 <canvas id="confettiCanvas"></canvas>
+<div class="celebration-toast" id="celebrationToast"></div>
 <div class="wrap">
   <p class="eyebrow">ProCo Roofing &middot; Realtor referral program</p>
   <h1>Top Closer Perks</h1>
   <p class="sub">Only closed roofs count. Watch the board move.</p>
-  <span class="admin-badge admin-only" id="adminBadge">Admin mode on <button id="changePasscodeBtn">change passcode</button></span>
+  <span class="admin-badge admin-only" id="adminBadge">
+    Admin mode on
+    <button id="changePasscodeBtn">change passcode</button>
+    <button id="exportCsvBtn">export csv</button>
+  </span>
  
   <div class="exec-grid" id="execGrid"></div>
+ 
+  <div class="toolbar-row">
+    <div class="quarter-select-row">
+      <label for="quarterSelect">Viewing:</label>
+      <select id="quarterSelect"></select>
+    </div>
+  </div>
  
   <div class="tabs">
     <button class="tab-btn active" data-tab="individual">Individual</button>
@@ -503,13 +576,13 @@
   </div>
  
   <div class="panel active" id="panel-individual">
-    <p class="section-title">Top closers this quarter</p>
+    <p class="section-title" id="individualTitle">Top closers this quarter</p>
     <div id="podiumRow"></div>
     <div id="individualList"><div class="loading">Loading board...</div></div>
   </div>
  
   <div class="panel" id="panel-offices">
-    <p class="section-title">Office race</p>
+    <p class="section-title" id="officesTitle">Office race</p>
     <div id="officeList"><div class="loading">Loading board...</div></div>
     <hr class="divider admin-only">
     <p class="section-title admin-only">Add an office</p>
@@ -535,11 +608,11 @@
  
   <div class="panel" id="panel-charts">
     <div class="chart-card">
-      <p class="section-title" style="font-size:15px;">Closed roofs by office (this quarter)</p>
+      <p class="section-title" style="font-size:15px;" id="officeChartTitle">Closed roofs by office</p>
       <canvas id="officeChart"></canvas>
     </div>
     <div class="chart-card">
-      <p class="section-title" style="font-size:15px;">Top agents (this quarter)</p>
+      <p class="section-title" style="font-size:15px;" id="agentChartTitle">Top agents</p>
       <canvas id="agentChart"></canvas>
     </div>
     <div class="chart-card">
@@ -633,10 +706,7 @@ function tryUnlockAdmin() {
 async function changePasscode() {
   const current = window.prompt('Enter your current passcode to confirm:');
   if (current === null) return;
-  if (current !== getPasscode()) {
-    alert('That is not the current passcode.');
-    return;
-  }
+  if (current !== getPasscode()) { alert('That is not the current passcode.'); return; }
   const next = window.prompt('Enter a new passcode:');
   if (!next) return;
   state.adminPasscode = next;
@@ -644,9 +714,36 @@ async function changePasscode() {
   alert('Passcode updated.');
 }
  
-const QUARTER_LABEL = 'Q3 2026';
-const QUARTER_START = new Date('2026-07-01T00:00:00');
-const QUARTER_END = new Date('2026-09-30T23:59:59');
+function exportCsv() {
+  const rows = [['Office', 'Agent', 'Close Date']];
+  state.offices.forEach(o => {
+    o.agents.forEach(a => {
+      (a.closes || []).forEach(ts => {
+        rows.push([o.name, a.name, new Date(ts).toISOString().slice(0, 10)]);
+      });
+    });
+  });
+  const csv = rows.map(r => r.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'top-closer-perks-export-' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+ 
+const QUARTERS = [
+  { label: 'Q1 2026', start: new Date('2026-01-01T00:00:00'), end: new Date('2026-03-31T23:59:59') },
+  { label: 'Q2 2026', start: new Date('2026-04-01T00:00:00'), end: new Date('2026-06-30T23:59:59') },
+  { label: 'Q3 2026', start: new Date('2026-07-01T00:00:00'), end: new Date('2026-09-30T23:59:59') },
+  { label: 'Q4 2026', start: new Date('2026-10-01T00:00:00'), end: new Date('2026-12-31T23:59:59') }
+];
+const CURRENT_QUARTER_INDEX = 2;
+let selectedQuarterIndex = CURRENT_QUARTER_INDEX;
+ 
 const YEAR = 2026;
 const YEAR_START = new Date('2026-01-01T00:00:00');
 const YEAR_END = new Date('2026-12-31T23:59:59');
@@ -669,7 +766,8 @@ function countInRange(closes, start, end) {
 }
  
 function quarterCount(agent) {
-  return countInRange(agent.closes || [], QUARTER_START, QUARTER_END);
+  const q = QUARTERS[selectedQuarterIndex];
+  return countInRange(agent.closes || [], q.start, q.end);
 }
  
 function yearCount(agent) {
@@ -699,9 +797,7 @@ function computeStreak(agent) {
  
 function streakBadge(agent) {
   const streak = computeStreak(agent);
-  if (streak >= 2) {
-    return `<span class="streak-badge">\u{1F525} ${streak}-month streak</span>`;
-  }
+  if (streak >= 2) return `<span class="streak-badge">\u{1F525} ${streak}-month streak</span>`;
   return '';
 }
  
@@ -713,15 +809,12 @@ async function loadState() {
   try {
     const response = await fetch(API_URL + '?action=getState');
     const data = await response.json();
-    if (data && data.offices) {
-      state = data;
-    } else {
-      state = defaultState();
-    }
+    state = (data && data.offices) ? data : defaultState();
   } catch (err) {
     console.error('Load error', err);
     state = defaultState();
   }
+  setupQuarterSelect();
   renderAll();
 }
  
@@ -737,14 +830,56 @@ async function saveState() {
   }
 }
  
-function fireConfetti() {
+function setupQuarterSelect() {
+  const select = document.getElementById('quarterSelect');
+  select.innerHTML = QUARTERS.map((q, i) =>
+    `<option value="${i}" ${i === selectedQuarterIndex ? 'selected' : ''}>${q.label}${i === CURRENT_QUARTER_INDEX ? ' (current)' : ''}</option>`
+  ).join('');
+  select.addEventListener('change', () => {
+    selectedQuarterIndex = parseInt(select.value, 10);
+    renderAll();
+  });
+}
+ 
+function showCelebration(message) {
+  const toast = document.getElementById('celebrationToast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(() => { toast.classList.remove('show'); }, 4000);
+}
+ 
+function playChime() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime + i * 0.11);
+      gain.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime + i * 0.11 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.11 + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.11);
+      osc.stop(ctx.currentTime + i * 0.11 + 0.32);
+    });
+  } catch (err) {
+    console.error('Audio error', err);
+  }
+}
+ 
+function fireConfetti(big) {
   const canvas = document.getElementById('confettiCanvas');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
   const colors = ['#E0899E', '#D6A756', '#C1637A', '#F8ECD6', '#B7BCC4'];
+  const count = big ? 200 : 100;
   const particles = [];
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * canvas.width,
       y: -20 - Math.random() * canvas.height * 0.3,
@@ -758,7 +893,7 @@ function fireConfetti() {
     });
   }
   let frame = 0;
-  const maxFrames = 130;
+  const maxFrames = big ? 170 : 130;
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => {
@@ -784,7 +919,8 @@ function fireConfetti() {
  
 function renderExecGrid() {
   const now = new Date();
-  const daysLeft = Math.max(0, Math.ceil((QUARTER_END - now) / (1000 * 60 * 60 * 24)));
+  const currentQ = QUARTERS[CURRENT_QUARTER_INDEX];
+  const daysLeft = Math.max(0, Math.ceil((currentQ.end - now) / (1000 * 60 * 60 * 24)));
  
   const allAgents = [];
   state.offices.forEach(o => o.agents.forEach(a => allAgents.push({ ...a, office: o.name })));
@@ -812,14 +948,15 @@ function renderExecGrid() {
     if (c > leadingAgentCount) { leadingAgentCount = c; leadingAgent = a; }
   });
  
+  const qLabel = QUARTERS[selectedQuarterIndex].label;
   const grid = document.getElementById('execGrid');
   grid.innerHTML = `
     <div class="cd-card">
-      <p class="cd-label">${QUARTER_LABEL} ends in</p>
+      <p class="cd-label">${currentQ.label} ends in</p>
       <p class="cd-value rust">${daysLeft}d</p>
     </div>
     <div class="cd-card">
-      <p class="cd-label">Closed this quarter</p>
+      <p class="cd-label">Closed in ${qLabel}</p>
       <p class="cd-value">${quarterTotal}</p>
     </div>
     <div class="cd-card">
@@ -831,7 +968,7 @@ function renderExecGrid() {
       <p class="cd-value" style="font-size:18px;">${totalOffices} &middot; ${totalAgents}</p>
     </div>
     <div class="cd-card">
-      <p class="cd-label">Quarter goal avg</p>
+      <p class="cd-label">${qLabel} goal avg</p>
       <p class="cd-value gold">${avgPct}%</p>
     </div>
     <div class="cd-card">
@@ -843,6 +980,11 @@ function renderExecGrid() {
       <p class="cd-value gold" style="font-size:16px; line-height:1.3;">${leadingAgent && leadingAgentCount > 0 ? escapeHtml(leadingAgent.name) : '\u2014'}</p>
     </div>
   `;
+ 
+  document.getElementById('individualTitle').textContent = 'Top closers \u2014 ' + qLabel;
+  document.getElementById('officesTitle').textContent = 'Office race \u2014 ' + qLabel;
+  document.getElementById('officeChartTitle').textContent = 'Closed roofs by office (' + qLabel + ')';
+  document.getElementById('agentChartTitle').textContent = 'Top agents (' + qLabel + ')';
 }
  
 function crownIcon() {
@@ -862,10 +1004,7 @@ function agentActionButtons(agent, officeName) {
  
 function renderPodium(top3) {
   const container = document.getElementById('podiumRow');
-  if (top3.length === 0) {
-    container.innerHTML = '';
-    return;
-  }
+  if (top3.length === 0) { container.innerHTML = ''; return; }
   const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
   const classes = ['first', 'second', 'third'];
   const order = top3.length >= 2 ? [1, 0, 2] : [0];
@@ -899,7 +1038,7 @@ function renderIndividual() {
  
   if (allAgents.length === 0) {
     document.getElementById('podiumRow').innerHTML = '';
-    container.innerHTML = '<div class="empty-state">No closed roofs logged yet this quarter. Log one from the Log a close tab to get the board moving.</div>';
+    container.innerHTML = `<div class="empty-state">No closed roofs logged for ${QUARTERS[selectedQuarterIndex].label}.</div>`;
     return;
   }
  
@@ -999,8 +1138,11 @@ function renderClosesList() {
     return;
   }
  
+  const sortedIdx = agent.closes.map((ts, idx) => idx).sort((a, b) => new Date(agent.closes[b]) - new Date(agent.closes[a]));
+ 
   let html = '';
-  agent.closes.forEach((ts, idx) => {
+  sortedIdx.forEach(idx => {
+    const ts = agent.closes[idx];
     const dateOnly = new Date(ts).toISOString().slice(0, 10);
     html += `
       <div class="close-row">
@@ -1017,6 +1159,7 @@ function renderClosesList() {
       if (!input.value) return;
       agent.closes[idx] = new Date(input.value + 'T12:00:00').toISOString();
       await saveState();
+      renderClosesList();
       renderAll();
     });
   });
@@ -1080,10 +1223,7 @@ function renderOffices() {
       const name = window.prompt('New agent name:');
       if (!name || !name.trim()) return;
       const exists = office.agents.some(a => a.name.toLowerCase() === name.trim().toLowerCase());
-      if (exists) {
-        alert('That agent already exists in this office.');
-        return;
-      }
+      if (exists) { alert('That agent already exists in this office.'); return; }
       office.agents.push({ name: name.trim(), closes: [] });
       await saveState();
       renderAll();
@@ -1317,11 +1457,16 @@ document.getElementById('logReferralBtn').addEventListener('click', async () => 
   const crossedBonus = prevQuarter < BONUS_THRESHOLD && newQuarter >= BONUS_THRESHOLD;
   const crossedPhone = prevYear < PHONE_THRESHOLD && newYear >= PHONE_THRESHOLD;
   const crossedTrip = prevYear < QUALIFY_THRESHOLD && newYear >= QUALIFY_THRESHOLD;
-  if (crossedBonus || crossedPhone || crossedTrip) fireConfetti();
+  const big = crossedBonus || crossedPhone || crossedTrip;
+ 
+  fireConfetti(big);
+  playChime();
+  showCelebration('\u{1F389} Congratulations! ' + agentName + ' just closed another roof!');
 });
  
 document.getElementById('adminToggle').addEventListener('click', tryUnlockAdmin);
 document.getElementById('changePasscodeBtn').addEventListener('click', (e) => { e.stopPropagation(); changePasscode(); });
+document.getElementById('exportCsvBtn').addEventListener('click', (e) => { e.stopPropagation(); exportCsv(); });
  
 document.getElementById('cancelAgentModalBtn').addEventListener('click', () => {
   document.getElementById('agentModal').classList.remove('show');
