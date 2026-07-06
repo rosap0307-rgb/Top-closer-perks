@@ -574,26 +574,72 @@ function renderIndividual() {
         <span class="rank-num">${rank}</span>
         ${rank === 1 ? crownIcon() : ''}
         <div class="agent-info">
-          <p class="agent-name">${escapeHtml(agent.name)}</p>
-          <p class="agent-office">${escapeHtml(agent.office)}</p>
-        </div>
-        ${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
-        <span class="agent-count">${agent.referrals}</span>
+        <p class="agent-name">${escapeHtml(agent.name)}</p>
+<p class="agent-office">${escapeHtml(agent.office)}</p>
+${isAdmin ? `
+<div style="margin-top:8px;display:flex;gap:6px;">
+  <button class="btn secondary edit-agent-btn"
+          data-office="${escapeHtml(agent.office)}"
+          data-agent="${escapeHtml(agent.name)}"
+          style="padding:4px 10px;font-size:11px;">
+    Edit
+  </button>
+  <button class="btn secondary delete-agent-btn"
+          data-office="${escapeHtml(agent.office)}"
+          data-agent="${escapeHtml(agent.name)}"
+          style="padding:4px 10px;font-size:11px;">
+    Delete
+  </button>
+</div>
+` : ''}
+</div>
+${unlocked ? '<span class="badge gold">Bonus unlocked</span>' : ''}
+<span class="agent-count">${agent.referrals}</span>
       </div>
     `;
   });
   html += '</div>';
   container.innerHTML = html;
-}
-
+document.querySelectorAll('.edit-agent-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const officeName = btn.dataset.office;
+    const agentName = btn.dataset.agent;
+    const office = state.offices.find(o => o.name === officeName);
+    if (!office) return;
+    const agent = office.agents.find(a => a.name === agentName);
+    if (!agent) return;
+    const newName = window.prompt('Edit agent name:', agent.name);
+    if (newName === null) return;
+    if (!newName.trim()) {
+      alert('Agent name cannot be empty.');
+      return;
+    }
+    agent.name = newName.trim();
+    await saveState();
+    renderAll();
+  });
+});
+document.querySelectorAll('.delete-agent-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const officeName = btn.dataset.office;
+    const agentName = btn.dataset.agent;
+    const office = state.offices.find(o => o.name === officeName);
+    if (!office) return;
+    const confirmDelete = window.confirm(
+      `Delete ${agentName}? This will also remove all of this agent's closes.`
+    );
+    if (!confirmDelete) return;
+    office.agents = office.agents.filter(a => a.name !== agentName);
+    await saveState();
+    renderAll();
+  });
+});
 function renderOffices() {
   const container = document.getElementById('officeList');
-
   if (state.offices.length === 0) {
     container.innerHTML = '<div class="empty-state">No offices added yet. Add one below to start tracking.</div>';
     return;
   }
-
   const officesWithTotals = state.offices.map(o => {
     const total = o.agents.reduce((s, a) => s + quarterCount(a), 0);
     const goal = Math.max(1, o.agentCount);
