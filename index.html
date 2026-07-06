@@ -602,6 +602,7 @@ function renderOffices() {
         <div class="office-head">
           <span class="office-name">${isLeading ? crownIcon() : ''}${escapeHtml(o.name)}</span>
           <span class="office-stat">${o.total} / ${o.goal}</span>
+          ${isAdmin ? `<button class="btn secondary delete-office-btn" data-office-id="${o.id}" style="padding:6px 12px;font-size:11px;">Delete</button>` : ''}
         </div>
         <p class="office-meta">${o.agentCount} agents &middot; goal: 1 referral per agent</p>
         <div class="bar-track"><div class="bar-fill ${complete ? 'complete' : ''}" style="width:${o.pct}%"></div></div>
@@ -609,6 +610,23 @@ function renderOffices() {
     `;
   });
   container.innerHTML = html;
+  document.querySelectorAll('.delete-office-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const officeId = btn.dataset.officeId;
+    const office = state.offices.find(o => o.id === officeId);
+
+    if (!office) return;
+
+    const confirmDelete = window.confirm(`Delete ${office.name}? This will also delete all agents and closes in this office.`);
+
+    if (!confirmDelete) return;
+
+    state.offices = state.offices.filter(o => o.id !== officeId);
+
+    await saveState();
+    renderAll();
+  });
+});
 }
 
 function renderGrand() {
