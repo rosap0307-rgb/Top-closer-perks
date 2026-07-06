@@ -356,6 +356,28 @@
   }
   .admin-link:hover { color: var(--muted); }
   body.show-admin .admin-link { color: var(--rose-dark); }
+  .modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-backdrop.show {
+  display: flex;
+}
+
+.modal-card {
+  width: min(420px, 92vw);
+  background: var(--card);
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  box-shadow: 0 20px 60px rgba(0,0,0,.20);
+}
 </style>
 </head>
 <body>
@@ -417,7 +439,24 @@
       <p class="status-msg" id="logFormStatus"></p>
     </div>
   </div>
+<div id="agentModal" class="modal-backdrop">
+  <div class="modal-card">
+    <p class="section-title">Edit agent</p>
 
+    <div class="form-row">
+      <input type="text" id="modalAgentName" placeholder="Agent name">
+    </div>
+
+    <div class="form-row">
+      <select id="modalOfficeSelect"></select>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn" id="saveAgentModalBtn">Save</button>
+      <button class="btn secondary" id="cancelAgentModalBtn">Cancel</button>
+    </div>
+  </div>
+</div>
   <hr class="divider" style="margin-top:40px;">
   <p class="admin-link" id="adminToggle">Admin</p>
 </div>
