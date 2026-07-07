@@ -33,22 +33,27 @@
     --avatar-bg: #EFE3D8;
   }
   body.dark {
-    --bg: #241A1E;
-    --card: #2F2329;
-    --ink: #F3E7EA;
-    --muted: #C9A8B2;
+    --bg: #121212;
+    --card: #1E1E1E;
+    --ink: #F5F0EE;
+    --muted: #ADA3A1;
     --rose: #EBA0B2;
     --rose-dark: #F1B8C6;
-    --rose-tint: #402A31;
-    --gold: #E6BB74;
-    --gold-dark: #F0CE96;
-    --gold-tint: #3D3020;
+    --rose-tint: #33282C;
+    --gold: #F0C674;
+    --gold-dark: #F7DBA0;
+    --gold-tint: #362C1A;
     --silver: #8D939C;
     --bronze: #8A6647;
-    --line: #3E2C33;
-    --line-strong: #55394A;
-    --bar-neutral: #4A3F44;
-    --avatar-bg: #4A3226;
+    --line: #2A2A2A;
+    --line-strong: #3A3A3A;
+    --bar-neutral: #333333;
+    --avatar-bg: #2E2620;
+  }
+  body.dark .cd-card, body.dark .shingle, body.dark .office-card,
+  body.dark .podium-card, body.dark .chart-card, body.dark .form-card,
+  body.dark .modal-card, body.dark .empty-state {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
   }
   * { box-sizing: border-box; }
   body {
@@ -204,8 +209,31 @@
     font-size: 12px; border: 1px solid var(--line-strong);
   }
   .mini-bar-track { height: 6px; background: var(--bar-neutral); border-radius: 10px; overflow: hidden; margin: 6px 0 2px; width: 100%; }
-  .mini-bar-fill { height: 100%; background: var(--rose); border-radius: 10px; transition: width 0.5s ease; }
+  .mini-bar-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease, background 0.3s ease; }
   .mini-bar-label { font-size: 10px; color: var(--muted); font-family: 'Quicksand', sans-serif; }
+  .motivation-banner {
+    background: linear-gradient(135deg, var(--gold-tint), var(--card) 60%);
+    border: 1px solid var(--gold); border-radius: 14px; padding: 12px 16px;
+    font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 13px;
+    color: var(--ink); margin-bottom: 18px; text-align: center;
+  }
+  .check-pop {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) scale(0.5);
+    background: #E9F7EF; border: 2px solid #34A853; color: #1E7E34;
+    width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 26px; z-index: 4100; opacity: 0; transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .check-pop.show { opacity: 1; transform: translateX(-50%) scale(1); }
+  .hof-card {
+    display: inline-flex; flex-direction: column; align-items: center; text-align: center;
+    background: linear-gradient(160deg, var(--gold-tint), var(--card) 70%); border: 1px solid var(--gold);
+    border-radius: 16px; padding: 14px 18px; margin: 0 8px 12px 0; min-width: 130px;
+  }
+  .hof-quarter { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; }
+  .hof-medal { font-size: 22px; margin-bottom: 4px; }
+  .hof-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 14px; color: var(--ink); margin: 0 0 2px; }
+  .hof-count { font-size: 11px; color: var(--muted); }
+  .hof-wrap { display: flex; flex-wrap: wrap; }
   .shingle:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(224,137,158,0.14); }
   .rank-num { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 13px; color: var(--muted); width: 20px; flex-shrink: 0; }
   .agent-info { flex: 1; min-width: 140px; }
@@ -305,6 +333,7 @@
 <body>
 <canvas id="confettiCanvas"></canvas>
 <div class="celebration-toast" id="celebrationToast"></div>
+<div class="check-pop" id="checkPop">✅</div>
  
 <div class="welcome-screen" id="welcomeScreen">
   <p class="welcome-eyebrow">ProCo Roofing</p>
@@ -360,6 +389,7 @@
   <div class="panel active" id="panel-individual">
     <p class="section-title" id="individualTitle">Top closers this quarter</p>
     <p class="cd-label" style="margin-bottom:14px;">1st closed roof: gift card &middot; 2nd+ this quarter: dinner for two or an activity &middot; 8+ this year: phone &middot; 15+ this year: Colorado trip</p>
+    <div class="motivation-banner" id="motivationBanner"></div>
     <div class="stats-grid" id="highlightsGrid"></div>
     <div id="podiumRow"></div>
     <div id="individualList"><div class="loading">Loading board...</div></div>
@@ -756,6 +786,33 @@ function renderExecGrid() {
   document.getElementById('agentChartTitle').textContent = 'Top agents (' + qLabel + ')';
 }
  
+const MOTIVATION_QUOTES = [
+  'Small wins become big victories.',
+  'One more roof today can change the leaderboard.',
+  'Consistency beats talent.',
+  'Your next referral could be your Colorado trip.',
+  'Every closed roof is a step closer to the podium.',
+  'Someone is one referral away from a phone upgrade \u2014 could be you.',
+  'The best time to close a roof was yesterday. The second best time is today.',
+  'Great agents aren\u2019t born, they\u2019re built one referral at a time.'
+];
+ 
+function renderMotivation() {
+  const el = document.getElementById('motivationBanner');
+  if (!el) return;
+  const dayIndex = Math.floor(Date.now() / 86400000);
+  const quote = MOTIVATION_QUOTES[dayIndex % MOTIVATION_QUOTES.length];
+  el.textContent = '\u{1F4AC} ' + quote;
+}
+ 
+function showCheckPop() {
+  const el = document.getElementById('checkPop');
+  if (!el) return;
+  el.classList.add('show');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => { el.classList.remove('show'); }, 1200);
+}
+ 
 function crownIcon() {
   return '<svg class="icon-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8z"/></svg>';
 }
@@ -780,9 +837,23 @@ function logoHtml(logoUrl) {
   return `<span class="logo-icon">\u{1F3E2}</span>`;
 }
  
+function progressStage(pct) {
+  if (pct >= 100) return { emoji: '\u{1F3C6}', color: '#D6A756' };
+  if (pct >= 75) return { emoji: '\u{1F7E2}', color: '#4CAF50' };
+  if (pct >= 50) return { emoji: '\u{1F7E1}', color: '#E8C547' };
+  if (pct >= 25) return { emoji: '\u{1F7E0}', color: '#E8924C' };
+  return { emoji: '\u{1F534}', color: '#D96B6B' };
+}
+ 
 function miniProgressBar(current, target, label) {
   const pct = Math.min(100, Math.round((current / target) * 100));
-  return `<div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pct}%"></div></div><p class="mini-bar-label">${escapeHtml(label)}</p>`;
+  const left = Math.max(0, target - current);
+  const stage = progressStage(pct);
+  const leftText = left > 0 ? `${left} roof${left === 1 ? '' : 's'} left` : 'Unlocked!';
+  return `
+    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pct}%; background:${stage.color};"></div></div>
+    <p class="mini-bar-label">${stage.emoji} \u{1F3E0} ${current}/${target} \u00b7 ${leftText} \u00b7 ${pct}%</p>
+  `;
 }
  
 function animateCounts(selector) {
@@ -1210,13 +1281,12 @@ function renderHallOfFame() {
     return;
   }
  
-  container.innerHTML = '<div class="shingle-list">' + rows.map(r => `
-    <div class="shingle">
-      <div class="agent-info">
-        <p class="agent-name">${escapeHtml(r.label)}</p>
-        <p class="agent-office">${escapeHtml(r.agent)}</p>
-      </div>
-      <span class="agent-count">${r.count}</span>
+  container.innerHTML = '<div class="hof-wrap">' + rows.map(r => `
+    <div class="hof-card">
+      <p class="hof-quarter">${escapeHtml(r.label.split(' ')[0])}</p>
+      <div class="hof-medal">\u{1F947}</div>
+      <p class="hof-name">${escapeHtml(r.agent)}</p>
+      <p class="hof-count">${r.count} closed roofs</p>
     </div>
   `).join('') + '</div>';
 }
@@ -1312,6 +1382,7 @@ function escapeHtml(str) {
 }
  
 function renderAll() {
+  renderMotivation();
   renderExecGrid();
   renderIndividual();
   renderOffices();
@@ -1415,6 +1486,7 @@ document.getElementById('logReferralBtn').addEventListener('click', async () => 
   await saveState();
   agentInput.value = '';
   statusEl.textContent = `Closed roof logged for ${agentName}.`;
+  showCheckPop();
   renderAll();
   setTimeout(() => { statusEl.textContent = ''; }, 2500);
  
